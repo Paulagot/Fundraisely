@@ -91,8 +91,3 @@ Contributions are welcome! Please open an issue or create a pull request for any
 
 ## Contact  
 
-For any questions, feel free to reach out:  
-- **Email**: afanadorgaleano@gmail.com 
-- **GitHub**: [SanAfaGal](https://github.com/SanAfaGal)  
-
-Enjoy playing Bingo! 🎉  
