@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FundRaisely Investor Pitch Deck (2025)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --indigo: #4F46E5;
+            --purple: #7C3AED;
+            --purple-dark: #4A26BB;
+            --purple-light: #9D6FFF;
+            --pink: #EC4899;
+            --green: #10B981;
+            --light-bg: #F9FAFB;
+            --dark-text: #1F2937;
+            --light-text: #F9FAFB;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--light-text);
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 0;
+            background-color: rgba(240, 240, 240, 0.9);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 60px;
+        }
+
+        .control-btn {
+            background: white;
+            border: 1px solid var(--indigo);
+            color: var(--indigo);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: var(--indigo);
+            color: white;
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-container {
+            width: 100%;
+            height: calc(100vh - 60px); /* Exact height minus controls */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            z-index: 10;
+        }
+
+        .slide-content {
+            max-width: 1100px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 40px;
+        }
+
+        /* New styles for the updated first slide */
+        .hero-slide {
+            background: linear-gradient(to bottom, #5744E3, #7C3AED);
+        }
+
+        .hero-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            padding: 0 60px;
+        }
+
+        .feature-box {
+            position: absolute;
+            top: 50%;
+            right: 60px;
+            transform: translateY(-50%);
+            background-color: rgba(41, 27, 127, 0.7);
+            border-radius: 20px;
+            width: 300px;
+            padding: 30px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feature-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .hero-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .hero-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        .hero-quote {
+            font-size: 1.4rem;
+            font-style: italic;
+            margin-top: 20px;
+        }
+
+        /* Original styles for other slides */
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--indigo), var(--purple));
+            color: white;
+        }
+
+        .white-bg {
+            background: white;
+            color: var(--dark-text);
+        }
+
+        .light-bg {
+            background: var(--light-bg);
+            color: var(--dark-text);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--indigo), var(--purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .founder {
+            margin-top: auto;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .main-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Updated bullet styles */
+        .bullets {
+            list-style: none;
+            margin-bottom: 2rem;
+            padding: 0 20px;
+        }
+
+        .bullets li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .bullets li i, .bullets li .emoji {
+            margin-right: 0.75rem;
+            color: var(--indigo);
+            font-size: 1.2rem;
+            min-width: 24px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Fix spacing issues between text elements */
+        .bullets li strong {
+            margin: 0;
+            padding: 0;
+            display: inline;
+        }
+
+        /* Ensure text flows properly without gaps */
+        .bullets li span + strong,
+        .bullets li strong + span {
+            margin-left: 0;
+        }
+
+        .market-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .metric {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .som-breakdown {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 1rem;
+        }
+
+        .business-model {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 3rem 0;
+            color: var(--indigo);
+        }
+
+        .two-columns {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+
+        .column {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .column h3 {
+            margin-bottom: 1rem;
+            color: var(--indigo);
+        }
+
+        .column ul {
+            list-style: none;
+        }
+
+        .column ul li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .column ul li strong {
+            margin-right: 0.5rem;
+            color: var(--indigo);
+        }
+
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .team-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--indigo), var(--purple));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .team-info {
+            text-align: center;
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-title {
+            font-size: 1.2rem;
+            color: var(--indigo);
+            margin-bottom: 0.5rem;
+        }
+
+        .team-expertise {
+            font-size: 1rem;
+        }
+
+        .advisory {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .financial-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .financial-table th, .financial-table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .financial-table th {
+            background-color: var(--indigo);
+            color: white;
+        }
+
+        .financial-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .ask-bullets {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .ask-bullets li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .ask-bullets li i {
+            margin-right: 1rem;
+            color: white;
+        }
+
+        .vision-statement {
+            font-size: 1.8rem;
+            line-height: 1.5;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .vision-quote {
+            font-style: italic;
+            text-align: center;
+            font-size: 1.4rem;
+            margin: 2rem 0;
+            color: var(--indigo);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 2rem;
+        }
+
+        .contact-info a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-info a i {
+            margin-right: 10px;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--dark-text);
+        }
+
+        /* Image container for better responsiveness */
+        .image-container {
+            max-width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: auto;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 30vh;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Two-column layout styles */
+        .two-col-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 50px;
+            height: 100%;
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .content-col {
+            flex: 1;
+            max-width: 55%;
+        }
+
+        .content-col h2.gradient-text {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-col p.main-text {
+            font-size: 1.4rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        /* Enhanced styling for two-column layout bullets */
+        .content-col .bullets {
+            padding: 0;
+        }
+
+        .content-col .bullets li {
+            font-size: 1.25rem;
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .content-col .bullets .emoji {
+            font-size: 1.4rem;
+            margin-right: 0.75rem;
+            min-width: 30px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .content-col .bullets li strong {
+            margin: 0;
+            padding: 0;
+            display: inline;
+        }
+
+        .media-col {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 45%;
+        }
+
+        .media-col img, .media-col video, .media-col iframe {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Reversed layout option (content on right, media on left) */
+        .two-col-layout.reversed {
+            flex-direction: row-reverse;
+        }
+
+        .content-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .content-text {
+            flex: 1 1 500px;
+            font-size: 1.4rem;
+            line-height: 1.8;
+        }
+
+        .content-img {
+            flex: 1 1 400px;
+            max-width: 500px;
+        }
+
+        .content-img img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .hero-content {
+                padding: 0 40px;
+            }
+            
+            .feature-box {
+                right: 40px;
+                width: 280px;
+            }
+            
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 2.2rem;
+            }
+
+            .content-col h2.gradient-text {
+                font-size: 2.7rem;
+            }
+            
+            .content-col p.main-text {
+                font-size: 1.3rem;
+            }
+            
+            .content-col .bullets li {
+                font-size: 1.15rem;
+            }
+            
+            .content-col .bullets .emoji {
+                min-width: 28px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-content {
+                justify-content: flex-start;
+                padding-top: 60px;
+            }
+            
+            .feature-box {
+                position: relative;
+                top: auto;
+                right: auto;
+                transform: none;
+                margin-top: 30px;
+                width: 100%;
+                max-width: 400px;
+                align-self: center;
+            }
+            
+            .hero-content {
+                align-items: center;
+                text-align: center;
+                padding: 30px;
+            }
+            
+            .hero-text {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .slide-content {
+                padding: 20px;
+                justify-content: flex-start;
+                overflow-y: auto;
+            }
+
+            .two-col-layout, .two-col-layout.reversed {
+                flex-direction: column;
+                gap: 30px;
+                padding: 10px 0;
+            }
+            
+            .content-col, .media-col {
+                max-width: 100%;
+            }
+            
+            .media-col img, .media-col video, .media-col iframe {
+                max-width: 85%;
+                margin: 0 auto;
+            }
+            
+            .content-col h2.gradient-text {
+                font-size: 2.5rem;
+                text-align: center;
+            }
+            
+            .content-col p.main-text {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+            
+            .hero-text {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+            
+            .feature-item {
+                margin-bottom: 15px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .main-text {
+                font-size: 1rem;
+            }
+            
+            .bullets li {
+                font-size: 1rem;
+            }
+            
+            .content-col .bullets li {
+                font-size: 1.1rem;
+            }
+            
+            .two-columns {
+                flex-direction: column;
+            }
+            
+            .financial-table th, .financial-table td {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+            
+            .hero-text {
+                font-size: 0.9rem;
+            }
+            
+            .feature-text {
+                font-size: 1rem;
+            }
+            
+            .hero-logo {
+                margin-bottom: 15px;
+            }
+            
+            .slide-content {
+                padding: 15px;
+            }
+            
+            .bullets li {
+                font-size: 0.95rem;
+            }
+            
+            .content-col .bullets li {
+                font-size: 1rem;
+            }
+            
+            .bullets li i, 
+            .bullets li .emoji,
+            .content-col .bullets .emoji {
+                margin-right: 0.5rem;
+                min-width: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- New Slide 1: Enhanced Hero Design -->
+        <div class="slide hero-slide active" id="slide1">
+            <div class="hero-content">
+                <div class="hero-logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h1 class="hero-title">FundRaisely</h1>
+                </div>
+                <h2 class="hero-subtitle">Compliant Fundraising<br>for Clubs & Charities</h2>
+                <p class="hero-text">
+                    Host bingo, lotteries and quizzes with built-in compliance checks, 
+                    automatically enforced limits, and comprehensive reporting for all regulatory requirements.
+                </p>
+                <p class="hero-quote">
+                    "A world where fundraising is fun, fair, and fraud-proof."
+                </p>
+                
+                <div class="feature-box">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt" style="color: #a78bfa;"></i>
+                        </div>
+                        <div class="feature-text">Regulatory Enforcement</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-heart" style="color: #ec4899;"></i>
+                        </div>
+                        <div class="feature-text">License Tracking</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-users" style="color: #34d399;"></i>
+                        </div>
+                        <div class="feature-text">Complete Audit Trail</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">1 / 12</div>
+        </div>
+
+    <!-- Slide 2: Alternating Image/Text Layout -->
+    <div class="slide white-bg" id="slide2">
+        <div class="slide-content">
+          <h2 class="gradient-text">The Problem</h2>
+          <div class="content-row">
+            <div class="content-img">
+              <img src="/public/compliancechallange.png" alt="Compliance challenges illustration">
+            </div>
+            <div class="content-text">
+              <p>
+                Fundraising through bingo, raffles, and quizzes is popular — but <strong>heavily regulated</strong>. Charities and clubs risk <strong>non-compliance, lost revenue, and reputational damage</strong> due to outdated tools and manual processes.
+              </p>
+              <ul class="bullets">
+                <li><span class="emoji">🏢</span><span>11,500+ charities in Ireland and 168,000+ in the UK</span></li>
+                <li><span class="emoji">⚖️</span><span>Legal thresholds for prizes, permits, and age restrictions</span></li>
+                <li><span class="emoji">⚠️</span><span>Clubs often unknowingly breach caps or fail to track events properly</span></li>
+                <li><span class="emoji">🔍</span><span>No tools currently combine <strong>compliance, digital payments, and transparency</strong></span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="slide-number">2 / 12</div>
+      </div>
+
+        <!-- Slide 3: Reversed Image/Text -->
+    <div class="slide light-bg" id="slide3">
+        <div class="slide-content">
+          <h2 class="gradient-text">Our Solution: FundRaisely</h2>
+          <div class="content-row" style="flex-direction: row-reverse;">
+            <div class="content-img">
+              <img src="/public/dash.png" alt="FundRaisely dashboard mockup">
+            </div>
+            <div class="content-text">
+              <p>
+                FundRaisely is a digital platform that enables clubs and charities to:
+              </p>
+              <ul class="bullets">
+                <li><span class="emoji">💸</span><span>Run <strong>fully compliant bingo, raffle, lotto, and quiz</strong> events</span></li>
+                <li><span class="emoji">📜</span><span>Enforce <strong>legal restrictions before launch</strong></span></li>
+                <li><span class="emoji">📊</span><span>Track and <strong>report all fundraising activity</strong></span></li>
+                <li><span class="emoji">🔐</span><span>Log events immutably using blockchain (Phase 2)</span></li>
+                <li><span class="emoji">✅</span><span>Accept payments via <strong>Stripe, PayPal, and Revolut</strong> — no crypto needed</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="slide-number">3 / 12</div>
+      </div>
+
+         
+    
+               <!-- Slide 4: Market (Updated Layout) -->
+    <div class="slide white-bg" id="slide4">
+        <div class="slide-content">
+          <h2 class="gradient-text">Market Opportunity</h2>
+          <div class="content-row">
+            <div class="content-text">
+              <table class="metric-table">
+                <tr>
+                  <td class="label">TAM (Global event-based fundraising)</td>
+                  <td>€4B+/year</td>
+                </tr>
+                <tr>
+                  <td class="label">SAM (Ireland + UK only)</td>
+                  <td>€820M/year</td>
+                </tr>
+              </table>
+              <div class="som-breakdown">
+                <p>1% of 179,500 orgs = ~1,795 orgs</p>
+                <p>5 events/year/org = 8,975 events</p>
+                <p>€2,000/event = €17.95M processed</p>
+                <p style="font-weight: 700; color: var(--indigo); margin-top: 10px;">8% fee = €1.436M annual revenue</p>
+              </div>
+            </div>
+            <div class="content-img">
+              <img src="/market.png" alt="Market funnel graphic">
+            </div>
+          </div>
+        </div>
+        <div class="slide-number">4 / 12</div>
+      </div>
+    
+            <!-- Slide 5: Business Model -->
+            <div class="slide light-bg" id="slide5">
+                <div class="slide-content">
+                    <h2 class="gradient-text">Business Model</h2>
+                    <div class="business-model">8% platform fee per event</div>
+                    <div style="text-align: center; margin: 2rem 0;">
+                        <p>Transparent pricing model</p>
+                        <p>No hidden fees</p>
+                        
+                    </div>
+                    <div style="margin-top: auto; display: flex; justify-content: center;">
+                        <img src="/api/placeholder/500/250" alt="Money flow diagram" style="max-width: 100%;">
+                    </div>
+                </div>
+                <div class="slide-number">5 / 12</div>
+            </div>
+    
+          <!-- Slide 6: Product & Technology -->
+<div class="slide white-bg" id="slide6">
+    <div class="slide-content">
+      <h2 class="gradient-text">Product & Technology</h2>
+      <div class="two-columns">
+        <div class="column">
+          <h3>Product Roadmap</h3>
+          <ul>
+            <li><strong>MVP:</strong> Bingo Game Logic created onchain, for tamperproof bingo and automated number drawing</li>
+            <li><strong>Phase 2:</strong> Add legal compliance wizard and reporting</li>
+            <li><strong>Phase 3:</strong> Add raffles, quizzes, and blockchain-based auditing</li>
+            <li><strong>Phase 4:</strong> Expand to additional markets and event types</li>
+          </ul>
+        </div>
+        <div class="column">
+          <h3>Technology Stack</h3>
+          <ul>
+            <li><strong>Payments:</strong> Integrated with Stripe (Revolut & PayPal in pipeline)</li>
+            <li><strong>Backend:</strong> Node.js + PostgreSQL</li>
+            <li><strong>Frontend:</strong> React</li>
+            <li><strong>Blockchain:</strong> Solana/Ethereum/VeChain</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: auto; display: flex; justify-content: center;">
+        <img src="/api/placeholder/400/200" alt="Product features icons" style="max-width: 100%;">
+      </div>
+    </div>
+    <div class="slide-number">6 / 12</div>
+  </div>
+    
+            <!-- Slide 7: Why Now? -->
+            <div class="slide light-bg" id="slide7">
+                <div class="slide-content">
+                    <h2 class="gradient-text">Why Now?</h2>
+                    <ul class="bullets">
+                        <li><span class="emoji">📋</span> Gambling regulation updates across Ireland & UK require digital tools</li>
+                        <li><span class="emoji">🏆</span> Small clubs and charities are underserved</li>
+                        <li><span class="emoji">💳</span> COVID accelerated digital payments — cash-based systems are fading</li>
+                        <li><span class="emoji">🔗</span> Blockchain adoption for social good is rising</li>
+                    </ul>
+                    <div style="margin-top: auto; display: flex; justify-content: center;">
+                        <img src="/api/placeholder/500/250" alt="Timeline graphic" style="max-width: 100%;">
+                    </div>
+                </div>
+                <div class="slide-number">7 / 12</div>
+            </div>
+    
+            <!-- Slide 8: Team -->
+            <div class="slide white-bg" id="slide8">
+                <div class="slide-content">
+                    <h2 class="gradient-text">Our Team</h2>
+                    <div class="team-member">
+                        <div class="team-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="team-info">
+                            <div class="team-name">Paula [Last Name]</div>
+                            <div class="team-title">Founder, Developer</div>
+                            <div class="team-expertise">Web3 + Compliance Focus</div>
+                        </div>
+                    </div>
+                    <div class="advisory">
+                        <p>Advisory board in formation:</p>
+                        <p>Legal | Charity Sector | Blockchain</p>
+                    </div>
+                </div>
+                <div class="slide-number">8 / 12</div>
+            </div>
+    
+            <!-- Slide 9: Financial Projections -->
+            <div class="slide light-bg" id="slide9">
+                <div class="slide-content">
+                    <h2 class="gradient-text">Financial Projections (Year 1–3)</h2>
+                    <p style="text-align: center; margin-bottom: 1rem;">
+                        Assumes 1% adoption (1,795 orgs), 5 events/year/org, €2,000/event
+                    </p>
+                    <table class="financial-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Events</th>
+                                <th>Gross Volume (€)</th>
+                                <th>Revenue (8%)</th>
+                                <th>Expenses</th>
+                                <th>Net Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2,000</td>
+                                <td>€4.0M</td>
+                                <td>€320K</td>
+                                <td>€180K</td>
+                                <td>€140K</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>5,000</td>
+                                <td>€10.0M</td>
+                                <td>€800K</td>
+                                <td>€320K</td>
+                                <td>€480K</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>8,975</td>
+                                <td>€17.95M</td>
+                                <td>€1.436M</td>
+                                <td>€520K</td>
+                                <td>€916K</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: auto; display: flex; justify-content: center;">
+                        <img src="/api/placeholder/500/200" alt="Revenue growth chart" style="max-width: 100%;">
+                    </div>
+                </div>
+                <div class="slide-number">9 / 12</div>
+            </div>
+    
+            <!-- Slide 10: Ask -->
+            <div class="slide gradient-bg" id="slide10">
+                <div class="slide-content">
+                    <h2>Our Ask</h2>
+                    <p style="font-size: 1.5rem; text-align: center; margin: 2rem 0;">
+                        <strong>€100,000 pre-seed</strong> to:
+                    </p>
+                    <ul class="ask-bullets">
+                        <li><i class="fas fa-check-circle"></i> Finalize MVP & legal review</li>
+                        <li><i class="fas fa-check-circle"></i> Run pilots in Ireland & UK</li>
+                        <li><i class="fas fa-check-circle"></i> Build team (1 FT dev, 1 compliance officer)</li>
+                        <li><i class="fas fa-check-circle"></i> Marketing & onboarding partnerships</li>
+                    </ul>
+                    <div style="margin-top: auto; display: flex; justify-content: center;">
+                        <img src="/api/placeholder/400/200" alt="Use of funds icons" style="max-width: 100%; filter: brightness(0) invert(1);">
+                    </div>
+                </div>
+                <div class="slide-number">10 / 12</div>
+            </div>
+    
+            <!-- Slide 11: Vision -->
+            <div class="slide white-bg" id="slide11">
+                <div class="slide-content">
+                    <h2 class="gradient-text">Our Vision</h2>
+                    <div class="vision-statement">
+                        To become the <strong>global platform for legally compliant, transparent fundraising</strong> — starting with bingo, and scaling to every small fundraising event type across regulated markets.
+                    </div>
+                    <div class="vision-quote">
+                        "A world where fundraising is fun, fair, and fraud-proof."
+                    </div>
+                    <div style="margin-top: auto; display: flex; justify-content: center;">
+                        <img src="/api/placeholder/500/250" alt="Global map" style="max-width: 100%;">
+                    </div>
+                </div>
+                <div class="slide-number">11 / 12</div>
+            </div>
+
+        <!-- Last slide (12): Thank You / Contact -->
+        <div class="slide gradient-bg" id="slide12">
+            <div class="slide-content">
+                <h1>Thank You</h1>
+                <div class="contact-info">
+                    <a href="mailto:paula@fundraisely.com"><i class="fas fa-envelope"></i> paula@fundraisely.com</a>
+                    <a href="https://www.fundraisely.com" target="_blank"><i class="fas fa-globe"></i> www.fundraisely.com</a>
+                    <a href="https://linkedin.com/in/paulalastname" target="_blank"><i class="fab fa-linkedin"></i> linkedin.com/in/paula[lastname]</a>
+                </div>
+                <div style="margin-top: auto; display: flex; justify-content: center;">
+                    <div style="font-size: 5rem; color: white;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">12 / 12</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="control-btn" id="prevBtn">Previous</button>
+        <button class="control-btn" id="nextBtn">Next</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            let currentSlideIndex = 0;
+
+            // Initialize the first slide
+            showSlide(currentSlideIndex);
+
+            // Event listeners for buttons
+            prevBtn.addEventListener('click', showPreviousSlide);
+            nextBtn.addEventListener('click', showNextSlide);
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    showNextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    showPreviousSlide();
+                }
+            });
+
+            function showSlide(index) {
+                // Hide all slides
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                // Show the current slide
+                slides[index].classList.add('active');
+                
+                // Update button states
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === slides.length - 1;
+            }
+
+            function showNextSlide() {
+                if (currentSlideIndex < slides.length - 1) {
+                    currentSlideIndex++;
+                    showSlide(currentSlideIndex);
+                }
+            }
+
+            function showPreviousSlide() {
+                if (currentSlideIndex > 0) {
+                    currentSlideIndex--;
+                    showSlide(currentSlideIndex);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

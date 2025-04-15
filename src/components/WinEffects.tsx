@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { motion } from 'framer-motion';
-import { Trophy, Heart } from 'lucide-react';
+import { Trophy, Heart, X } from 'lucide-react';
 
 interface WinEffectsProps {
   isWinner: boolean;
@@ -53,28 +53,35 @@ export function WinEffects({ isWinner, winnerName }: WinEffectsProps) {
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       exit={{ scale: 0 }}
-      className={`flex items-center justify-center gap-4 mb-8 p-4 rounded-lg ${
-        isWinner ? 'bg-green-500 text-white' : 'bg-blue-100 text-blue-800'
+      className={`relative flex items-center justify-center gap-4 mb-8 p-6 rounded-xl shadow-lg ${
+        isWinner 
+          ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white' 
+          : 'bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800'
       }`}
     >
       {isWinner ? (
         <>
-          <Trophy size={32} />
-          <span className="text-2xl font-bold">You won!</span>
+          <Trophy size={36} className="text-yellow-300" />
+          <div>
+            <h3 className="text-2xl font-bold">You won!</h3>
+            <p className="text-white/80">Congratulations on your bingo victory!</p>
+          </div>
         </>
       ) : (
         <>
-          <Heart size={32} />
-          <span className="text-xl font-medium">
-            {winnerName} won! Better luck next time!
-          </span>
+          <Heart size={32} className="text-pink-500" />
+          <div>
+            <h3 className="text-xl font-medium">{winnerName} won!</h3>
+            <p className="text-indigo-600">Better luck next time!</p>
+          </div>
         </>
       )}
       <button
+        type="button"
         onClick={() => setShowEffect(false)}
-        className="ml-4 text-sm opacity-75 hover:opacity-100"
+        className="absolute top-2 right-2 p-1 rounded-full hover:bg-black/10 transition-colors"
       >
-        Dismiss
+        <X size={16} className="opacity-75 hover:opacity-100" />
       </button>
     </motion.div>
   );

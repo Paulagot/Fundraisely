@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BingoCell } from '../types/game';
+import type { BingoCell } from '../types/game';
 import { cn } from '../utils/cn';
 
 interface BingoCardProps {
@@ -9,20 +9,20 @@ interface BingoCardProps {
 }
 
 export function BingoCard({ cells, onCellClick }: BingoCardProps) {
-  const getColumnCells = (colIndex: number) => 
+  const getColumnCells = (colIndex: number) =>
     Array.from({ length: 5 }, (_, row) => cells[row * 5 + colIndex]);
-
+  
   return (
-    <div className="grid grid-cols-5 gap-1 sm:gap-2 p-2 sm:p-4 bg-white rounded-lg shadow-xl max-w-2xl mx-auto">
+    <div className="grid grid-cols-5 gap-1 sm:gap-2 p-4 sm:p-6 bg-white rounded-2xl shadow-xl max-w-2xl mx-auto">
       {['B', 'I', 'N', 'G', 'O'].map((letter) => (
         <div
           key={letter}
-          className="flex items-center justify-center h-10 sm:h-12 md:h-16 bg-blue-600 text-white text-lg sm:text-xl md:text-2xl font-bold rounded"
+          className="flex items-center justify-center h-10 sm:h-12 md:h-16 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-lg sm:text-xl md:text-2xl font-bold rounded-lg"
         >
           {letter}
         </div>
       ))}
-      {['B', 'I', 'N', 'G', 'O'].map((_, colIndex) => 
+      {['B', 'I', 'N', 'G', 'O'].map((_, colIndex) =>
         getColumnCells(colIndex).map((cell, rowIndex) => {
           const index = rowIndex * 5 + colIndex;
           return (
@@ -32,9 +32,9 @@ export function BingoCard({ cells, onCellClick }: BingoCardProps) {
               whileTap={{ scale: 0.95 }}
               onClick={() => onCellClick(index)}
               className={cn(
-                "h-10 sm:h-12 md:h-16 rounded-lg text-base sm:text-lg md:text-xl font-semibold transition-colors duration-200",
+                "h-10 sm:h-12 md:h-16 rounded-lg text-base sm:text-lg md:text-xl font-semibold transition-colors duration-200 shadow",
                 cell.marked
-                  ? "bg-green-500 text-white"
+                  ? "bg-gradient-to-r from-green-500 to-teal-500 text-white"
                   : "bg-gray-100 hover:bg-gray-200 text-gray-800"
               )}
             >

@@ -20,6 +20,9 @@ interface GameStore {
   setHasWon: (hasWon: boolean) => void;
   winnerId: string | null;
   setWinnerId: (id: string | null) => void;
+  // ADDED: joinError state and setter
+  joinError: string;
+  setJoinError: (error: string) => void;
   updateRoomState: (state: RoomState) => void;
 }
 
@@ -42,6 +45,9 @@ export const useGameStore = create<GameStore>((set) => ({
   setHasWon: (hasWon) => set({ hasWon }),
   winnerId: null,
   setWinnerId: (id) => set({ winnerId: id }),
+  // ADDED: Initialize joinError state and setter
+  joinError: '',
+  setJoinError: (error) => set({ joinError: error }),
   updateRoomState: (state) => set({
     players: state.players,
     gameStarted: state.gameStarted,

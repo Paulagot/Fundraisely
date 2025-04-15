@@ -10,13 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@rainbow-me/rainbowkit": "^2.2.4",
     "canvas-confetti": "^1.9.2",
+    "ethers": "^5.7.2",
     "framer-motion": "^11.0.8",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.22.2",
     "socket.io-client": "^4.7.4",
+    "viem": "^2.26.3",
+    "wagmi": "^2.14.16",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
