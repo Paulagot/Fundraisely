@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { motion } from 'framer-motion';
 import { Trophy, Heart, X } from 'lucide-react';
@@ -21,7 +21,7 @@ export function WinEffects({ isWinner, winnerName }: WinEffectsProps) {
         return Math.random() * (max - min) + min;
       };
 
-      const interval: NodeJS.Timer = setInterval(() => {
+      const interval = setInterval(() => {
         const timeLeft = animationEnd - Date.now();
 
         if (timeLeft <= 0) {
@@ -78,6 +78,7 @@ export function WinEffects({ isWinner, winnerName }: WinEffectsProps) {
       )}
       <button
         type="button"
+        title="Close"
         onClick={() => setShowEffect(false)}
         className="absolute top-2 right-2 p-1 rounded-full hover:bg-black/10 transition-colors"
       >

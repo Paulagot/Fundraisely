@@ -16,9 +16,14 @@ import {
 } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
 import { useWeb3 } from '../context/Web3Context';
+import { useAppKitAccount } from '@reown/appkit/react';
 import WalletConnect from '../components/WalletConnect';
 import { useRoomPayment } from '../hooks/useRoomPayments';
+import { useReownRoomPayment } from '../hooks/useReownRoomPayments';
 import { useRoomVerification } from '../hooks/useRoomVerification';
+
+// Payment address constant
+const PAYMENT_ADDRESS = '0xb7ACd1159dBed96B955C4d856fc001De9be59844';
 
 /**
  * Tests if localStorage is available and working
@@ -49,14 +54,35 @@ export function Landing() {
   const navigate = useNavigate();
   const setPlayerName = useGameStore(state => state.setPlayerName);
   
-  // Web3 integration
-  const { isConnected, account } = useWeb3();
+  // Original Web3 integration
+  const { isConnected: isWeb3Connected, account } = useWeb3();
   const { 
-    makeRoomPayment, 
-    paymentStatus, 
-    transactionHash, 
-    error: paymentError 
+    makeRoomPayment: makeWeb3Payment, 
+    paymentStatus: web3PaymentStatus, 
+    transactionHash: web3TransactionHash, 
+    error: web3PaymentError 
   } = useRoomPayment();
+
+  // Reown AppKit integration  
+  const { address, isConnected: isReownConnected } = useAppKitAccount();
+  const { 
+    makeRoomPayment: makeReownPayment, 
+    paymentStatus: reownPaymentStatus, 
+    transactionHash: reownTransactionHash, 
+    error: reownPaymentError 
+  } = useReownRoomPayment(PAYMENT_ADDRESS);
+  
+  // Determine which wallet is active
+  const isAnyWalletConnected = isWeb3Connected || isReownConnected;
+  const activeWalletAddress = isReownConnected ? address : account;
+  const paymentStatus = isReownConnected ? reownPaymentStatus : web3PaymentStatus;
+  const transactionHash = isReownConnected ? reownTransactionHash : web3TransactionHash;
+  const paymentError = isReownConnected ? reownPaymentError : web3PaymentError;
+  
+  // Format the address for display
+  const formattedAddress = activeWalletAddress
+    ? `${activeWalletAddress.slice(0, 6)}...${activeWalletAddress.slice(-4)}`
+    : '';
   
   // Room verification hook
   const { 
@@ -112,7 +138,7 @@ export function Landing() {
     }
   };
 
-  // UPDATED: joinRoom function now verifies room exists before payment
+  // UPDATED: joinRoom function that works with either wallet
   const joinRoom = async (e: React.FormEvent) => {
     e.preventDefault();
     setJoinError('');
@@ -121,8 +147,8 @@ export function Landing() {
       return;
     }
     
-    // Check wallet connection
-    if (!isConnected) {
+    // Check if any wallet is connected
+    if (!isAnyWalletConnected) {
       setJoinError('Please connect your wallet first');
       return;
     }
@@ -139,9 +165,12 @@ export function Landing() {
     // Room exists, now process payment
     setJoinError('Room verified. Processing payment...');
     
-    // Process payment
+    // Process payment using the active wallet
     try {
-      const payment = await makeRoomPayment(roomCode);
+      // Choose the payment method based on which wallet is connected
+      const payment = isReownConnected 
+        ? await makeReownPayment(roomCode)
+        : await makeWeb3Payment(roomCode);
       
       if (!payment.success) {
         setJoinError(payment.error || 'Payment failed');
@@ -156,7 +185,7 @@ export function Landing() {
       
       // Store payment proof in localStorage so we can send it when socket connects
       localStorage.setItem('paymentProof', JSON.stringify({
-        address: account,
+        address: activeWalletAddress,
         txHash: payment.txHash,
         roomId: roomCode.toUpperCase()
       }));
@@ -169,7 +198,8 @@ export function Landing() {
       }));
       
       navigate(`/game/${roomCode.toUpperCase()}`);
-    } catch {
+    } catch (error) {
+      console.error("Payment error:", error);
       setJoinError('Failed to process payment');
     }
   };
@@ -202,28 +232,27 @@ export function Landing() {
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white pb-20">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-sm shadow-sm z-50">
-  <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-    <div className="flex items-center gap-2">
-      <Gamepad2 className="h-6 w-6 text-indigo-600" />
-      <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-700 to-purple-600 bg-clip-text text-transparent">FundRaisely</h1>
-    </div>
-    <div className="flex items-center gap-4">
-      <a href="#how-it-works" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">How It Works</a>
-      <a href="#benefits" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">Benefits</a>
-      <a href="#faq" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">FAQ</a>
-      {/* Add the new Pitch Deck link here */}
-      <Link to="/pitch-deck" className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">Pitch Deck</Link>
-    </div>
-  </div>
-</header>
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Gamepad2 className="h-6 w-6 text-indigo-600" />
+            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-700 to-purple-600 bg-clip-text text-transparent">FundRaisely</h1>
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="#how-it-works" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">How It Works</a>
+            <a href="#benefits" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">Benefits</a>
+            <a href="#faq" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">FAQ</a>
+            <Link to="/pitch-deck" className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">Pitch Deck</Link>
+          </div>
+        </div>
+      </header>
       
       {/* Hero Section */}
       <div className="pt-24 pb-10 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="relative">
             {/* Background Elements */}
-            <div className="absolute -top-10 -left-10 w-32 h-32 bg-purple-300 rounded-full opacity-20 blur-2xl"></div>
-            <div className="absolute top-20 -right-10 w-40 h-40 bg-indigo-300 rounded-full opacity-20 blur-2xl"></div>
+            <div className="absolute -top-10 -left-10 w-32 h-32 bg-purple-300 rounded-full opacity-20 blur-2xl" />
+            <div className="absolute top-20 -right-10 w-40 h-40 bg-indigo-300 rounded-full opacity-20 blur-2xl"/>
             
             {/* Hero Content */}
             <div className="text-center relative z-10">
@@ -267,7 +296,7 @@ export function Landing() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Create Room Card */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform transition hover:shadow-2xl hover:-translate-y-1">
-            <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+            <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-500" />
             <div className="p-8">
               <div className="flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-6 mx-auto">
                 <Dices className="h-8 w-8 text-indigo-600" />
@@ -318,7 +347,7 @@ export function Landing() {
           
           {/* Join Room Card */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform transition hover:shadow-2xl hover:-translate-y-1">
-            <div className="h-2 bg-gradient-to-r from-green-500 to-teal-500"></div>
+            <div className="h-2 bg-gradient-to-r from-green-500 to-teal-500" />
             <div className="p-8">
               <div className="flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6 mx-auto">
                 <Users className="h-8 w-8 text-green-600" />
@@ -326,13 +355,35 @@ export function Landing() {
               
               <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Join Event</h2>
               
-              {/* Wallet Connection */}
-              <div className="mb-6">
-                <WalletConnect 
-                  buttonText="Connect Payment Method" 
-                  className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold
-                          hover:from-indigo-700 hover:to-purple-700 transform transition shadow-md"
-                />
+              {/* Wallet Connection Options */}
+              <div className="mb-6 space-y-4">
+                <h3 className="text-md font-medium text-gray-700 text-center">Choose a wallet provider:</h3>
+                
+                <div className="grid grid-cols-1 gap-3">
+                  <WalletConnect 
+                    buttonText="Connect with MetaMask" 
+                    className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold
+                            hover:from-indigo-700 hover:to-purple-700 transform transition shadow-md"
+                  />
+                  
+                  <div className="relative">
+                    <div className="text-center text-sm text-gray-500 mb-2">Or</div>
+                    <appkit-button
+                    label='Connect'
+                     />
+                  </div>
+                </div>
+                
+                {isAnyWalletConnected && (
+                  <div className="bg-green-100 text-green-800 p-3 rounded-lg text-center">
+                    <p className="font-medium">
+                      {isReownConnected 
+                        ? `Connected with Reown: ${formattedAddress}`
+                        : `Connected with MetaMask: ${formattedAddress}`
+                      }
+                    </p>
+                  </div>
+                )}
               </div>
               
               <form onSubmit={joinRoom} className="space-y-4">
@@ -389,7 +440,7 @@ export function Landing() {
                   disabled={
                     !roomCode.trim() || 
                     !joinName.trim() || 
-                    !isConnected || 
+                    !isAnyWalletConnected || 
                     paymentStatus === 'pending' ||
                     roomVerificationStatus === 'checking'
                   }
@@ -411,6 +462,7 @@ export function Landing() {
         </div>
       </div>
       
+      {/* Rest of your Landing page content remains unchanged */}
       {/* How It Works Section */}
       <div id="how-it-works" className="container mx-auto px-4 max-w-6xl mt-20 pt-10">
         <div className="text-center mb-12">
@@ -556,6 +608,7 @@ export function Landing() {
           </div>
         </div>
       </div>
+     
       
       {/* CTA Section */}
       <div className="container mx-auto px-4 max-w-6xl mt-20 pt-10">

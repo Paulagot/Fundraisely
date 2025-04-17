@@ -1,7 +1,6 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLetterForNumber } from '../utils/gameLogic';
-import { Play, Pause } from 'lucide-react';
+
 
 interface NumberCallerProps {
   currentNumber: number | null;
@@ -43,12 +42,12 @@ export function NumberCaller({ currentNumber, calledNumbers, autoPlay }: NumberC
           <div className="flex items-center gap-1">
             {autoPlay ? (
               <>
-                <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
                 <span className="text-xs text-green-600 font-medium">ON</span>
               </>
             ) : (
               <>
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
                 <span className="text-xs text-red-600 font-medium">OFF</span>
               </>
             )}

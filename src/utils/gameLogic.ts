@@ -1,11 +1,12 @@
-import { BingoCell } from '../types/game';
+// gameLogic.ts
+import type { BingoCell } from '../types/game';
 
 const BINGO_COLUMNS = [
   { letter: 'B', range: [1, 15] },
   { letter: 'I', range: [16, 30] },
   { letter: 'N', range: [31, 45] },
   { letter: 'G', range: [46, 60] },
-  { letter: 'O', range: [61, 75] }
+  { letter: 'O', range: [61, 75] },
 ] as const;
 
 function getRandomNumberInRange(min: number, max: number, exclude: Set<number>): number {
@@ -22,22 +23,19 @@ export function generateBingoCard(): number[] {
   const usedNumbers = new Set<number>();
   const card: number[] = [];
 
-  // Generate numbers for each column
-  BINGO_COLUMNS.forEach(({ range }) => {
+  for (const { range } of BINGO_COLUMNS) {
     const [min, max] = range;
     const columnNumbers: number[] = [];
 
-    // Generate 5 unique numbers for this column
     while (columnNumbers.length < 5) {
       const num = getRandomNumberInRange(min, max, usedNumbers);
       usedNumbers.add(num);
       columnNumbers.push(num);
     }
 
-    // Sort numbers within the column
     columnNumbers.sort((a, b) => a - b);
     card.push(...columnNumbers);
-  });
+  }
 
   return card;
 }
@@ -50,7 +48,12 @@ export function getLetterForNumber(num: number): string {
   return column?.letter || '';
 }
 
-export function checkWin(card: BingoCell[]): boolean {
+export interface WinResult {
+  type: 'none' | 'line' | 'full_house';
+  pattern?: number[];
+}
+
+export function checkWin(card: BingoCell[], lineWinClaimed: boolean): WinResult {
   const winningPatterns = [
     // Rows
     [0, 1, 2, 3, 4],
@@ -66,21 +69,20 @@ export function checkWin(card: BingoCell[]): boolean {
     [4, 9, 14, 19, 24],
     // Diagonals
     [0, 6, 12, 18, 24],
-    [4, 8, 12, 16, 20]
+    [4, 8, 12, 16, 20],
   ];
 
-  return winningPatterns.some(pattern =>
-    pattern.every(index => card[index].marked)
-  );
-}
+  if (!lineWinClaimed) {
+    for (const pattern of winningPatterns) {
+      if (pattern.every(index => card[index].marked)) {
+        return { type: 'line', pattern };
+      }
+    }
+  }
 
-export function generateNumber(calledNumbers: number[]): number {
-  const calledSet = new Set(calledNumbers);
-  const availableNumbers = Array.from({ length: 75 }, (_, i) => i + 1)
-    .filter(num => !calledSet.has(num));
-  
-  if (availableNumbers.length === 0) return 0;
-  
-  const randomIndex = Math.floor(Math.random() * availableNumbers.length);
-  return availableNumbers[randomIndex];
+  if (card.every(cell => cell.marked)) {
+    return { type: 'full_house' };
+  }
+
+  return { type: 'none' };
 }

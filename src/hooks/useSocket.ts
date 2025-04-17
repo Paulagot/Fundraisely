@@ -1,24 +1,27 @@
 import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
+import type { Socket } from 'socket.io-client';
 import { useGameStore } from '../store/gameStore';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
 
 export function useSocket(roomId: string) {
   const {
     setSocket,
-    socket,
     playerName,
-    updateRoomState,
-    setWinnerId,
-    setHasWon,
+    setPlayers,
+    setGameStarted,
     setCurrentNumber,
     setCalledNumbers,
     setAutoPlay,
     setJoinError,
+    setLineWinners,
+    setFullHouseWinners,
+    setIsPaused,
+    setLineWinClaimed,
   } = useGameStore();
-  
-  // Keep track of whether we've emitted the room creation event
+
+  const socketRef = useRef<Socket | null>(null);
   const roomCreatedRef = useRef(false);
 
   useEffect(() => {
@@ -28,111 +31,179 @@ export function useSocket(roomId: string) {
     }
 
     console.log(`Initializing socket for room: ${roomId}, player: ${playerName}`);
-    
-    // CRITICAL CHANGE: Save the room creation data before creating the socket
-    // so we can use it after connection even if other components modify localStorage
+
     const roomCreationString = localStorage.getItem('roomCreation');
     const roomJoiningString = localStorage.getItem('roomJoining');
     const paymentProofString = localStorage.getItem('paymentProof');
-    
-    // Parse the data outside the socket connection
+
     let roomCreationData = null;
     let roomJoiningData = null;
     let paymentProofData = null;
-    
+
     try {
       if (roomCreationString) {
         roomCreationData = JSON.parse(roomCreationString);
-        console.log('Stored room creation data:', roomCreationData);
       }
-      
       if (roomJoiningString) {
         roomJoiningData = JSON.parse(roomJoiningString);
       }
-      
       if (paymentProofString) {
         paymentProofData = JSON.parse(paymentProofString);
       }
     } catch (e) {
       console.error('Error parsing localStorage data:', e);
+      return;
     }
-    
-    // Create socket connection
-    const newSocket = io(SOCKET_URL);
-    setSocket(newSocket);
 
-    // Socket event handlers
+    if (!socketRef.current) {
+      socketRef.current = io(SOCKET_URL, {
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+      });
+      setSocket(socketRef.current);
+    }
+
+    const newSocket = socketRef.current;
+
     newSocket.on('connect', () => {
       console.log(`Socket connected with ID: ${newSocket.id}`);
-      
-      // Don't remove the roomCreation data until we've successfully created the room
-      if (roomCreationData && roomCreationData.roomId === roomId && !roomCreatedRef.current) {
-        console.log(`Creating room ${roomId} for player ${playerName}`);
-        
-        // Emit create_room event
-        newSocket.emit('create_room', { 
-          roomId, 
-          playerName
+
+      const storedRoomId = localStorage.getItem('roomId');
+      const storedPlayerName = localStorage.getItem('playerName');
+
+      if (storedRoomId && storedPlayerName) {
+        console.log(`Emitting rejoin_room for ${storedRoomId} as ${storedPlayerName}`);
+        newSocket.emit('rejoin_room', {
+          roomId: storedRoomId,
+          playerName: storedPlayerName,
         });
-        
-        // Mark that we've emitted the create room event
+      }
+
+      if (roomCreationData && roomCreationData.roomId === roomId && !roomCreatedRef.current) {
+        console.log(`Emitting create_room for ${roomId} by ${playerName}`);
+        newSocket.emit('create_room', { roomId, playerName });
+        localStorage.setItem('roomId', roomId);
+        localStorage.setItem('playerName', playerName);
         roomCreatedRef.current = true;
-        
-        // We'll keep the room creation data for now - don't remove it yet
-        // We'll remove it after we receive the room_update event
-      } 
-      else if (roomJoiningData && roomJoiningData.roomId === roomId) {
-        console.log(`Joining room ${roomId} for player ${playerName}`);
-        
-        // Prepare payment proof if available
+      } else if (roomJoiningData && roomJoiningData.roomId === roomId) {
+        console.log(`Emitting join_room for ${roomId} by ${playerName}`);
         let paymentProof = null;
         if (paymentProofData && paymentProofData.roomId === roomId) {
           paymentProof = {
             address: paymentProofData.address,
-            txHash: paymentProofData.txHash
+            txHash: paymentProofData.txHash,
           };
         }
-        
-        // Emit join_room event
-        newSocket.emit('join_room', { 
-          roomId, 
-          playerName,
-          paymentProof
-        });
-        
-        // Clear joining data after emitting
+        newSocket.emit('join_room', { roomId, playerName, paymentProof });
+        localStorage.setItem('roomId', roomId);
+        localStorage.setItem('playerName', playerName);
         localStorage.removeItem('roomJoining');
         if (paymentProofData) {
           localStorage.removeItem('paymentProof');
         }
-      }
-      else if (!roomCreationData && !roomJoiningData) {
-        console.log('No room data found, user may have navigated directly to URL');
-        setJoinError('Please create or join a room first');
+      } else {
+        console.warn(`No valid roomCreation or roomJoining data for room: ${roomId}`);
       }
     });
 
-    // Successfully joined or created room - now we can clear localStorage
     newSocket.on('room_update', (roomState) => {
-      console.log('Room update received:', roomState);
-      
-      // Room was successfully created or joined, safe to clear localStorage now
-      if (roomCreationData && roomCreatedRef.current) {
-        console.log('Room created successfully, clearing localStorage data');
-        localStorage.removeItem('roomCreation');
-        roomCreatedRef.current = true; // Ensure we don't try to create again
+      console.log('Received room_update:', roomState);
+
+      if (roomState.players) {
+        if (Array.isArray(roomState.players)) {
+          setPlayers(roomState.players);
+        } else if (typeof roomState.players === 'object' && roomState.players !== null) {
+          try {
+            if (typeof roomState.players.values === 'function') {
+              const playersArray = Array.from(roomState.players.values());
+              setPlayers(playersArray);
+            } else {
+              const playersArray = Object.values(roomState.players);
+              setPlayers(playersArray);
+            }
+          } catch (e) {
+            console.error('Error converting players data to array:', e);
+            setPlayers([]);
+          }
+        } else {
+          setPlayers([]);
+        }
+      } else {
+        setPlayers([]);
       }
-      
-      updateRoomState(roomState);
+
+      setGameStarted(roomState.gameStarted || false);
+      setCurrentNumber(roomState.currentNumber || null);
+      setCalledNumbers(roomState.calledNumbers || []);
+      setAutoPlay(roomState.autoPlay || false);
+      setLineWinners(roomState.lineWinners || []);
+      setFullHouseWinners(roomState.fullHouseWinners || []);
+      setIsPaused(roomState.isPaused || false);
+      setLineWinClaimed(roomState.lineWinClaimed || false);
+
+      if (roomCreationData && roomCreatedRef.current) {
+        console.log('Room created successfully, clearing roomCreation');
+        localStorage.removeItem('roomCreation');
+      }
+    });
+
+    newSocket.on('resync_state', (resyncData) => {
+      console.log('Received resync_state:', resyncData);
+
+      if (Array.isArray(resyncData.players)) {
+        setPlayers(resyncData.players);
+      } else if (resyncData.players && typeof resyncData.players === 'object') {
+        try {
+          if (typeof resyncData.players.values === 'function') {
+            setPlayers(Array.from(resyncData.players.values()));
+          } else {
+            setPlayers(Object.values(resyncData.players));
+          }
+        } catch (e) {
+          console.error('Error handling resync players data:', e);
+          setPlayers([]);
+        }
+      }
+
+      setGameStarted(resyncData.gameStarted || false);
+      setCurrentNumber(resyncData.currentNumber || null);
+      setCalledNumbers(resyncData.calledNumbers || []);
+      setAutoPlay(resyncData.autoPlay || false);
+      setLineWinners(resyncData.lineWinners || []);
+      setFullHouseWinners(resyncData.fullHouseWinners || []);
+      setIsPaused(resyncData.isPaused || false);
+      setLineWinClaimed(resyncData.lineWinClaimed || false);
+
+      if (resyncData.yourCard) {
+        const currentPlayers = useGameStore.getState().players;
+        if (Array.isArray(currentPlayers)) {
+          const updatedPlayers = currentPlayers.map(player =>
+            player.name === playerName ? { ...player, card: resyncData.yourCard } : player
+          );
+          setPlayers(updatedPlayers);
+        }
+      }
+    });
+
+    newSocket.on('player_card_update', ({ playerId, card }) => {
+      const currentPlayers = useGameStore.getState().players;
+      if (!Array.isArray(currentPlayers)) {
+        return;
+      }
+      const updatedPlayers = currentPlayers.map(player =>
+        player.id === playerId ? { ...player, card } : player
+      );
+      setPlayers(updatedPlayers);
     });
 
     newSocket.on('join_error', ({ message }) => {
-      console.error('Socket event - join_error:', message);
+      console.error('Received join_error:', message);
       setJoinError(message);
     });
 
     newSocket.on('create_error', ({ message }) => {
-      console.error('Socket event - create_error:', message);
+      console.error('Received create_error:', message);
       setJoinError(message);
     });
 
@@ -145,36 +216,62 @@ export function useSocket(roomId: string) {
       setAutoPlay(autoPlay);
     });
 
-    newSocket.on('game_won', ({ winnerId, playerName }) => {
-      console.log(`Game won by ${playerName}`);
-      setWinnerId(winnerId);
-      setHasWon(true);
+    newSocket.on('game_paused', () => {
+      setIsPaused(true);
     });
 
-    newSocket.on('game_reset', () => {
-      console.log('Game reset');
-      updateRoomState({
-        players: [],
-        gameStarted: false,
-        currentNumber: null,
-        calledNumbers: [],
-        autoPlay: false,
-        winnerId: null
-      });
-      setHasWon(false);
+    newSocket.on('game_unpaused', () => {
+      setIsPaused(false);
+    });
+
+    newSocket.on('line_winners_proposed', ({ winners }) => {
+      setLineWinners(winners);
+    });
+
+    newSocket.on('line_winners_declared', ({ winners }) => {
+      setLineWinners(winners);
+      setLineWinClaimed(true);
+    });
+
+    newSocket.on('full_house_winners_proposed', ({ winners }) => {
+      setFullHouseWinners(winners);
+    });
+
+    newSocket.on('full_house_winners_declared', ({ winners }) => {
+      setFullHouseWinners(winners);
+      setGameStarted(false);
+    });
+
+    newSocket.on('connect_error', (error) => {
+      console.error('Socket connect_error:', error);
+      setJoinError('Failed to connect to the server. Please try again later.');
     });
 
     return () => {
       console.log('Cleaning up socket connection');
-      newSocket.disconnect();
-      
-      // Only clean up localStorage on component unmount if we're actually navigating away
-      // from the game (not just a reconnection)
+      if (socketRef.current?.connected) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
       if (roomCreatedRef.current) {
         localStorage.removeItem('roomCreation');
       }
     };
-  }, [roomId, playerName]);
+  }, [
+    roomId,
+    playerName,
+    setSocket,
+    setJoinError,
+    setCurrentNumber,
+    setCalledNumbers,
+    setAutoPlay,
+    setPlayers,
+    setGameStarted,
+    setLineWinners,
+    setFullHouseWinners,
+    setIsPaused,
+    setLineWinClaimed,
+  ]);
 
-  return socket;
+  return socketRef.current;
 }

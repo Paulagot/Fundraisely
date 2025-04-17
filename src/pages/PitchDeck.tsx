@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import type React from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Home } from 'lucide-react';
 
@@ -37,7 +38,7 @@ export function PitchDeck() {
       <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white pt-24 pb-10 px-4">
         <div className="container mx-auto max-w-md">
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+            <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-500" />
             <div className="p-8">
               <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Enter PIN to Access Pitch Deck</h2>
               
@@ -98,7 +99,7 @@ export function PitchDeck() {
             border: 'none'
           }}
           title="FundRaisely Pitch Deck"
-        ></iframe>
+        />
       </div>
     </div>
   );
