@@ -1,50 +1,62 @@
-# Multiplayer Bingo Game 🎲  
+# Multiplayer Crypto Bingo Game 🎲  
 
-A real-time multiplayer Bingo game built with React, TypeScript, and Socket.io, featuring responsive design, single-player mode, and dynamic room management.
+A real-time multiplayer Bingo game built with React, TypeScript, and Socket.io, along with smart contracts driven by blockchain. featuring responsive design, single-player mode, and dynamic room management.  Smart Contract to managed payment and winner prizes.
 
 ## Features  
-- **Single and Multiplayer Modes**: Play solo or with friends in real-time.  
+
+- **Multiplayer realtime**: Play with friends in real-time.
 - **Dynamic Room Management**: Create or join rooms with unique room IDs.  
 - **Responsive Design**: Fully optimized for mobile and desktop devices.  
 - **Auto-play Functionality**: Automatically call Bingo numbers for a seamless experience.  
 - **Real-Time Updates**: Instant updates for all players in a room.  
 - **Winner Celebration**: Confetti for the winner and a message for other players.  
+- **Smart Contracts to manage prize pool**: curently available on sepolia testnet,
 
 ---
 
-## Prerequisites  
+## Prerequisites
 
+- **Sepolia testnet tokens to mint and play with**: inlcuding mint button for testnet USDC.
+- **requires testnet Eth to launch smart contract and game**: host requies sepilia testnet eth to launch a game.
 Ensure you have the following installed:  
-- [Node.js](https://nodejs.org/) (v16 or higher)  
+- [Node.js](https://nodejs.org/)
 - [npm](https://www.npmjs.com/)  
 
 ---
 
 ## Getting Started  
 
-### 1. Clone the Repository  
+### 1. Clone the Repository
+
 ```bash  
 git clone https://github.com/your-username/bingo-game.git  
 cd bingo-game
 ```  
 
-### 2. Install Dependencies  
+### 2. Install Dependencies
+
 Using `npm`:  
+
 ```bash  
 npm install  
 ```  
 
-### 3. Set Up Environment Variables  
+### 3. Set Up Environment Variables
+
 Create a `.env` file in the root directory and add the following:  
+
 ```bash  
-VITE_SOCKET_URL=http://localhost:3001  
+VITE_SOCKET_URL=http://localhost:3001
+VITE_SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/your-api-key
+VITE_PROJECT_ID=reown-api-key
 ```  
 
 ---
 
 ## Running the App  
 
-### Start app 
+### Start app
+
 ```bash  
 npm run dev  
 ```  
@@ -66,16 +78,12 @@ By default, the app will run at `http://localhost:5173`.
 - **Frontend**: React, TypeScript, CSS Modules  
 - **Backend**: Node.js, Express, Socket.io  
 - **Styling**: Tailwind CSS  
+- **Reown appkit**: wallet connections and functionality
+- **Viem and Wagmi**: smart contract interaction
 
 ---
 
 ## Roadmap  
-
-- Add user avatars.  
-- Implement dark mode.  
-- Add localization for different languages.  
-
----
 
 ## License  
 
@@ -89,5 +97,4 @@ Contributions are welcome! Please open an issue or create a pull request for any
 
 ---
 
-## Contact  
-
+## Contact

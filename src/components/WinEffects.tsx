@@ -6,39 +6,43 @@ import { Trophy, Heart, X } from 'lucide-react';
 interface WinEffectsProps {
   isWinner: boolean;
   winnerName: string;
+  playerName: string;
+  winNotificationType: 'line' | 'fullHouse';
+  onClose?: () => void;
 }
 
-export function WinEffects({ isWinner, winnerName }: WinEffectsProps) {
+export function WinEffects({
+  isWinner,
+  winnerName,
+  playerName,
+  winNotificationType,
+  onClose,
+}: WinEffectsProps) {
   const [showEffect, setShowEffect] = useState(true);
 
   useEffect(() => {
     if (isWinner) {
-      const duration = 3 * 1000;
+      const duration = 3000;
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-      const randomInRange = (min: number, max: number) => {
-        return Math.random() * (max - min) + min;
-      };
+      const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
       const interval = setInterval(() => {
         const timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
+        if (timeLeft <= 0) return clearInterval(interval);
 
         const particleCount = 50 * (timeLeft / duration);
 
         confetti({
           ...defaults,
           particleCount,
-          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
         });
         confetti({
           ...defaults,
           particleCount,
-          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
         });
       }, 250);
 
@@ -48,14 +52,17 @@ export function WinEffects({ isWinner, winnerName }: WinEffectsProps) {
 
   if (!showEffect) return null;
 
+  const isLine = winNotificationType === 'line';
+  const isYou = winnerName === playerName;
+
   return (
     <motion.div
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       exit={{ scale: 0 }}
       className={`relative flex items-center justify-center gap-4 mb-8 p-6 rounded-xl shadow-lg ${
-        isWinner 
-          ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white' 
+        isWinner
+          ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white'
           : 'bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800'
       }`}
     >
@@ -64,7 +71,9 @@ export function WinEffects({ isWinner, winnerName }: WinEffectsProps) {
           <Trophy size={36} className="text-yellow-300" />
           <div>
             <h3 className="text-2xl font-bold">You won!</h3>
-            <p className="text-white/80">Congratulations on your bingo victory!</p>
+            <p className="text-white/80">
+              {isLine ? 'Congratulations on your line win!' : 'Congratulations on your bingo victory!'}
+            </p>
           </div>
         </>
       ) : (
@@ -72,14 +81,19 @@ export function WinEffects({ isWinner, winnerName }: WinEffectsProps) {
           <Heart size={32} className="text-pink-500" />
           <div>
             <h3 className="text-xl font-medium">{winnerName} won!</h3>
-            <p className="text-indigo-600">Better luck next time!</p>
+            <p className="text-indigo-600">
+              {isLine ? 'Congratulations on their line win!' : 'Congratulations on their bingo victory!'}
+            </p>
           </div>
         </>
       )}
       <button
         type="button"
         title="Close"
-        onClick={() => setShowEffect(false)}
+        onClick={() => {
+          setShowEffect(false);
+          onClose?.();
+        }}
         className="absolute top-2 right-2 p-1 rounded-full hover:bg-black/10 transition-colors"
       >
         <X size={16} className="opacity-75 hover:opacity-100" />

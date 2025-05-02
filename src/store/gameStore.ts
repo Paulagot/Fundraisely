@@ -1,4 +1,5 @@
 // gameStore.ts
+// gameStore.ts
 import { create } from 'zustand';
 import { BingoCell, Player } from '../types/game';
 
@@ -35,6 +36,11 @@ interface GameStore {
   setLineWinners: (winners: { id: string; name: string }[]) => void;
   fullHouseWinners: { id: string; name: string }[];
   setFullHouseWinners: (winners: { id: string; name: string }[]) => void;
+  // New payment status property
+  paymentsFinalized: boolean;
+  setPaymentsFinalized: (status: boolean) => void;
+  // New reset function
+  resetGameState: () => void;
 }
 
 export const useGameStore = create<GameStore>((set) => ({
@@ -70,4 +76,30 @@ export const useGameStore = create<GameStore>((set) => ({
   setLineWinners: (winners) => set({ lineWinners: winners }),
   fullHouseWinners: [],
   setFullHouseWinners: (winners) => set({ fullHouseWinners: winners }),
+  // Initialize payment status
+  paymentsFinalized: false,
+  setPaymentsFinalized: (status) => set({ paymentsFinalized: status }),
+  
+  // Add the new reset function that resets all game state to initial values
+  resetGameState: () => set({
+    // Keep the socket connection as we might reuse it
+    socket: useGameStore.getState().socket,
+    players: [],
+    gameStarted: false,
+    currentNumber: null,
+    calledNumbers: [],
+    autoPlay: false,
+    hasWon: false,
+    winner: null,
+    playerName: '',
+    joinError: '',
+    hasWonLine: false,
+    hasWonFullHouse: false,
+    isPaused: false,
+    lineWinClaimed: false,
+    lineWinners: [],
+    fullHouseWinners: [],
+    // Reset payment status as well
+    paymentsFinalized: false
+  }),
 }));

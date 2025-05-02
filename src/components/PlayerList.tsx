@@ -20,19 +20,21 @@ export function PlayerList({
   const currentPlayer = players.find(p => p.id === currentPlayerId);
   const allPlayersReady = players.every(p => p.isReady);
   const readyCount = players.filter(p => p.isReady).length;
-  const isSinglePlayer = players.length === 1;
-  
+  const isSinglePlayer = players.length === 1; // <-- We need this!
+
   return (
     <div className="bg-white rounded-2xl shadow-xl p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4 sm:mb-5">
-        <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-700 to-purple-600 bg-clip-text text-transparent">Players</h2>
+        <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-700 to-purple-600 bg-clip-text text-transparent">
+          Players
+        </h2>
         <div className="inline-flex items-center px-2 py-1 rounded-full bg-indigo-100">
           <span className="text-sm text-indigo-800 font-medium">
             {readyCount}/{players.length} Ready
           </span>
         </div>
       </div>
-      
+
       <div className="space-y-2 mb-5 sm:mb-6 max-h-64 overflow-y-auto pr-1">
         {players.map((player, index) => (
           <motion.div
@@ -59,7 +61,7 @@ export function PlayerList({
                 {player.id === currentPlayerId && ' (You)'}
               </span>
             </div>
-            
+
             {player.isReady ? (
               <div className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
@@ -74,10 +76,11 @@ export function PlayerList({
           </motion.div>
         ))}
       </div>
-      
+
       {!gameStarted && (
         <div className="space-y-3">
-          {currentPlayer && !currentPlayer.isHost && !isSinglePlayer && (
+          {/* Players who are NOT host can ready up */}
+          {currentPlayer && !currentPlayer.isHost && (
             <button
               type="button"
               onClick={onToggleReady}
@@ -90,16 +93,17 @@ export function PlayerList({
               {currentPlayer.isReady ? 'Cancel Ready' : 'Ready Up'}
             </button>
           )}
-          
+
+          {/* Host can start the game if not solo and all ready */}
           {currentPlayer?.isHost && (
             <button
               type="button"
               onClick={onStartGame}
-              disabled={!isSinglePlayer && !allPlayersReady}
+              disabled={isSinglePlayer || !allPlayersReady}
               className="w-full py-2.5 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl text-sm sm:text-base font-medium
                          hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
             >
-              {isSinglePlayer ? 'Start Solo Game' : 'Start Game'}
+              Start Game
             </button>
           )}
         </div>
@@ -107,3 +111,4 @@ export function PlayerList({
     </div>
   );
 }
+

@@ -41,6 +41,11 @@ const io = new Server(httpServer, {
 
 setupSocketHandlers(io);
 
+// ✅ Heartbeat route for health checking
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

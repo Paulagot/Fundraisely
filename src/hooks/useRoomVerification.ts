@@ -1,5 +1,4 @@
 // src/hooks/useRoomVerification.ts
-
 import { useState, useEffect, useCallback } from 'react';
 import { io } from 'socket.io-client';
 import type { Socket } from 'socket.io-client';
@@ -9,22 +8,23 @@ const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 type VerificationStatus = 'idle' | 'checking' | 'exists' | 'not_exists' | 'error';
 
 interface UseRoomVerificationReturn {
-  verifyRoom: (roomId: string) => Promise<boolean>;
+  verifyRoom: (roomId: string) => Promise<{
+    exists: boolean;
+    chainId?: string | number;
+    contractAddress?: string;
+    namespace?: string;
+    entryFee?: string;
+  }>;
   status: VerificationStatus;
   error: string;
 }
 
-/**
- * Hook for verifying if a room exists before joining
- */
 export function useRoomVerification(): UseRoomVerificationReturn {
   const [status, setStatus] = useState<VerificationStatus>('idle');
   const [error, setError] = useState<string>('');
   const [verificationSocket, setVerificationSocket] = useState<Socket | null>(null);
 
-  // Initialize socket connection for verification only
   useEffect(() => {
-    // Create a separate socket just for room verification to avoid conflicts
     const socket = io(SOCKET_URL, { autoConnect: false });
     setVerificationSocket(socket);
 
@@ -35,60 +35,75 @@ export function useRoomVerification(): UseRoomVerificationReturn {
     };
   }, []);
 
-  // Verify room exists function
-  const verifyRoom = useCallback(async (roomId: string): Promise<boolean> => {
-    if (!verificationSocket) {
-      setError('Verification service not available');
-      setStatus('error');
-      return false;
-    }
-
-    return new Promise((resolve) => {
-      setStatus('checking');
-      setError('');
-
-      // Connect socket if not already connected
-      if (!verificationSocket.connected) {
-        verificationSocket.connect();
+  const verifyRoom = useCallback(
+    async (roomId: string): Promise<{
+      exists: boolean;
+      chainId?: string | number;
+      contractAddress?: string;
+      namespace?: string;
+      entryFee?: string;
+    }> => {
+      if (!verificationSocket) {
+        setError('Verification service not available');
+        setStatus('error');
+        return { exists: false };
       }
 
-      // Set timeout for verification
-      const timeoutId = setTimeout(() => {
-        setError('Verification timed out');
-        setStatus('error');
-        resolve(false);
-      }, 5000);
+      return new Promise((resolve) => {
+        setStatus('checking');
+        setError('');
 
-      // Listen for verification result
-      const handleVerificationResult = (data: { roomId: string; exists: boolean }) => {
-        if (data.roomId === roomId) {
-          clearTimeout(timeoutId);
-          
-          if (data.exists) {
-            setStatus('exists');
-            resolve(true);
-          } else {
-            setStatus('not_exists');
-            setError('Room does not exist');
-            resolve(false);
-          }
-          
-          // Clean up listener
-          verificationSocket.off('room_verification_result', handleVerificationResult);
+        if (!verificationSocket.connected) {
+          verificationSocket.connect();
         }
-      };
 
-      // Set up listener
-      verificationSocket.on('room_verification_result', handleVerificationResult);
+        const timeoutId = setTimeout(() => {
+          setError('Verification timed out');
+          setStatus('error');
+          resolve({ exists: false });
+        }, 5000);
 
-      // Request verification
-      verificationSocket.emit('verify_room_exists', { roomId });
-    });
-  }, [verificationSocket]);
+        const handleVerificationResult = (data: {
+          roomId: string;
+          exists: boolean;
+          chainId?: string | number;
+          contractAddress?: string;
+          namespace?: string;
+          entryFee?: string;
+        }) => {
+          if (data.roomId === roomId) {
+            clearTimeout(timeoutId);
+
+            if (data.exists) {
+              setStatus('exists');
+              resolve({
+                exists: true,
+                chainId: data.chainId,
+                contractAddress: data.contractAddress,
+                namespace: data.namespace,
+                entryFee: data.entryFee,
+              });
+            } else {
+              setStatus('not_exists');
+              setError('Room does not exist');
+              resolve({ exists: false });
+            }
+
+            verificationSocket.off('room_verification_result', handleVerificationResult);
+          }
+        };
+
+        verificationSocket.on('room_verification_result', handleVerificationResult);
+        verificationSocket.emit('verify_room_exists', { roomId });
+      });
+    },
+    [verificationSocket]
+  );
 
   return {
     verifyRoom,
     status,
-    error
+    error,
   };
 }
+

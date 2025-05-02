@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import type { BingoCell } from '../types/game';
 import { cn } from '../utils/cn';
