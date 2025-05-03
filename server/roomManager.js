@@ -121,3 +121,49 @@ export function setPaymentsFinalized(roomId, status = true) {
     console.warn(`⚠️ Cannot set payments finalized - Room ${roomId} not found`);
   }
 }
+
+export function logAllRooms() {
+  console.log(`\n[RoomManager] 🧾 Logging all active rooms (${rooms.size} total):`);
+
+  const roomSummaries = [];
+
+  for (const [roomId, room] of rooms.entries()) {
+    const summary = {
+      roomId,
+      playerCount: room.players.size,
+      hostId: room.hostId,
+      chain: `${room.namespace}:${room.chainId || 'unknown'}`,
+      contractAddress: room.contractAddress || 'N/A',
+      gameStarted: room.gameStarted,
+      gameOver: room.gameOver || false,
+      paymentsFinalized: room.paymentsFinalized,
+      roomAgeSeconds: Math.floor((Date.now() - room.createdAt) / 1000),
+      calledNumbersCount: room.calledNumbers.length,
+      lineWinnersCount: room.lineWinners.length,
+      fullHouseWinnersCount: room.fullHouseWinners.length,
+    };
+
+    console.log(`📦 Room: ${summary.roomId}`);
+    console.log(`   👥 Players: ${summary.playerCount}`);
+    console.log(`   🧑 Host ID: ${summary.hostId}`);
+    console.log(`   🌐 Chain: ${summary.chain}`);
+    console.log(`   💼 Contract: ${summary.contractAddress}`);
+    console.log(`   🎮 Game Started: ${summary.gameStarted}`);
+    console.log(`   🏁 Game Over: ${summary.gameOver}`);
+    console.log(`   💸 Payments Finalized: ${summary.paymentsFinalized}`);
+    console.log(`   ⌛ Room Age: ${summary.roomAgeSeconds}s`);
+    console.log(`   🧾 Called Numbers: ${summary.calledNumbersCount}`);
+    console.log(`   🏆 Line Winners: ${summary.lineWinnersCount}`);
+    console.log(`   🏆 Full House Winners: ${summary.fullHouseWinnersCount}`);
+    console.log('----------------------------------------');
+
+    roomSummaries.push(summary);
+  }
+
+  if (rooms.size === 0) {
+    console.log('[RoomManager] 🚫 No active rooms');
+  }
+
+  return roomSummaries;
+}
+

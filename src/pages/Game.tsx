@@ -46,6 +46,7 @@ export function Game() {
     playerName,
     lineWinners,
     fullHouseWinners,
+    setFullHouseWinners,
     gameStarted,
     isPaused,
     joinError,
@@ -117,6 +118,22 @@ export function Game() {
   }, [socket]);
 
   console.log('[Game] 💰 Entry Fee:', entryFee);
+
+  useEffect(() => {
+    if (!socket) return;
+  
+    const handleFullHouseDeclared = (data: { winners: any[] }) => {
+      console.log('[Game] 🎉 Received full_house_winners_declared:', data);
+      setFullHouseWinners(data.winners); // update the Zustand store
+    };
+  
+    socket.on('full_house_winners_declared', handleFullHouseDeclared);
+  
+    return () => {
+      socket.off('full_house_winners_declared', handleFullHouseDeclared);
+    };
+  }, [socket]);
+  
 
   // 🛡️ Access control
   useEffect(() => {

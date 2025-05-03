@@ -1,4 +1,3 @@
-// Changes to CreateRoomCard.tsx
 import { useState, type FC } from 'react';
 import ConfirmRoomModal from './ConfirmRoomModal';
 import { Dices, Users, Wallet, Gamepad2, Info, ArrowRight } from 'lucide-react';
@@ -7,6 +6,7 @@ import { useSupportedNetworks } from '../hooks/useSupportedNetworks';
 import type { SupportedNetwork } from '../hooks/useSupportedNetworks';
 import MintUSDCButton from './MintUSDCButton';
 import { saveRoomCreationData } from '../utils/localStorageUtils';
+import { chainInfo } from '../constants/contractFactoryAddresses'; // Import chainInfo
 
 interface CreateRoomCardProps {
   onCreateRoom: (roomData: {
@@ -16,11 +16,23 @@ interface CreateRoomCardProps {
     walletAddress: string;
     roomId: string;
     contractAddress: string;
-    namespace: string; // 🌟 NEW
+    namespace: string;
   }) => void;
   isGenerating: boolean;
   roomId: string;
 }
+
+// List of testnet chain IDs (EVM only, since minting is EVM-specific)
+const TESTNET_CHAIN_IDS = [
+  '11155111', // Sepolia
+  '84532', // Base Sepolia
+  '421614', // Arbitrum Sepolia
+  '43113', // Avalanche Fuji
+  '11155420', // Optimism Sepolia
+  '1328', // Sei Devnet
+  '8080', // BOB Sepolia
+  '168587773', // Blast Sepolia
+];
 
 const CreateRoomCard: FC<CreateRoomCardProps> = ({ onCreateRoom, isGenerating, roomId }) => {
   const [createName, setCreateName] = useState('');
@@ -67,16 +79,16 @@ const CreateRoomCard: FC<CreateRoomCardProps> = ({ onCreateRoom, isGenerating, r
 
   const handleConfirm = async (walletAddress: string, contractAddress: string) => {
     if (!address || selectedChain === '') return;
-  
+
     const selectedNetwork = supportedNetworks.find((n) => String(n.id) === selectedChain);
-    const namespace = selectedNetwork?.namespace || 'eip155'; // 🌟 NEW
-  
+    const namespace = selectedNetwork?.namespace || 'eip155';
+
     if (namespace === 'solana') {
       alert('Solana is not yet supported for room creation. Please select an EVM chain.');
       setShowConfirmModal(false);
       return;
     }
-  
+
     onCreateRoom({
       playerName: createName,
       entryFee,
@@ -84,9 +96,9 @@ const CreateRoomCard: FC<CreateRoomCardProps> = ({ onCreateRoom, isGenerating, r
       walletAddress,
       roomId,
       contractAddress,
-    namespace, // 🌟 NEW
+      namespace,
     });
-  
+
     saveRoomCreationData({
       isCreator: true,
       playerName: createName,
@@ -95,12 +107,14 @@ const CreateRoomCard: FC<CreateRoomCardProps> = ({ onCreateRoom, isGenerating, r
       roomId,
       walletAddress,
       contractAddress,
-    namespace, // 🌟 NEW
+      namespace,
     });
-  
+
     setShowConfirmModal(false);
   };
-  
+
+  // Check if the selected chain is a testnet with a USDC address
+  const isTestnetWithUSDC = selectedChain && TESTNET_CHAIN_IDS.includes(selectedChain) && !!chainInfo[selectedChain]?.usdcAddress;
 
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform transition hover:shadow-2xl hover:-translate-y-1">
@@ -195,7 +209,7 @@ const CreateRoomCard: FC<CreateRoomCardProps> = ({ onCreateRoom, isGenerating, r
             )}
           </button>
 
-          <MintUSDCButton />
+          {isTestnetWithUSDC && <MintUSDCButton chainId={selectedChain} />}
 
           <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
             <Info className="h-4 w-4" />
@@ -204,7 +218,6 @@ const CreateRoomCard: FC<CreateRoomCardProps> = ({ onCreateRoom, isGenerating, r
         </div>
       </div>
 
-      {/* The modal is now a portal that renders at the root level of the DOM */}
       <ConfirmRoomModal
         isOpen={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}

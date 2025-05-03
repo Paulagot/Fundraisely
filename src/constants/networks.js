@@ -109,6 +109,16 @@ export const networks = [
     ],
     namespace: 'eip155'
   },
+
+  {
+    id: 43113,
+    name: 'Avalanche Fuji C-Chain',
+    rpcUrls: [
+      'wss://avalanche-fuji.drpc.org'
+      
+    ],
+    namespace: 'eip155'
+  },
   {
     id: 30,
     name: 'Rootstock Mainnet',
@@ -159,8 +169,8 @@ export const networks = [
     id: 1328,
     name: 'Sei Devnet',
     rpcUrls: [
-      'https://sei-devnet-rpc.lavenderfive.com',
-      'https://rpc-devnet.sei-apis.com'
+      'https://evm-rpc-testnet.sei-apis.com',
+      'https://evm-rpc-testnet-sei.stingray.plus'
     ],
     namespace: 'eip155'
   },

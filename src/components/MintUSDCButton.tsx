@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useAccount, useWriteContract } from 'wagmi';
-
-// const USDC_ADDRESS = '0xDEadd2F1102897C89D3214452A583ADf13E23855';
-const USDC_ADDRESS = '0x0713adEE4545945a0d3B036913Da9c4D6a7ff7b9';
+import { chainInfo } from '../constants/contractFactoryAddresses'; // Import chainInfo
 
 // Minimal ABI for the mint function
 const MOCK_USDC_ABI = [
@@ -20,21 +18,34 @@ const MOCK_USDC_ABI = [
   },
 ];
 
-const MintUSDCButton = () => {
+interface MintUSDCButtonProps {
+  chainId: string; // Pass chainId as a prop
+}
+
+const MintUSDCButton = ({ chainId }: MintUSDCButtonProps) => {
   const { address, isConnected } = useAccount();
   const { writeContractAsync } = useWriteContract();
 
   const [isMinting, setIsMinting] = useState(false);
   const [status, setStatus] = useState('');
 
+  // Get USDC address from chainInfo based on chainId
+  const usdcAddress = chainInfo[chainId]?.usdcAddress;
+
   // Debug account and ABI
   console.log('MintUSDCButton - useAccount:', { address, isConnected });
-  console.log('MintUSDCButton - MOCK_USDC_ABI:', MOCK_USDC_ABI);
+  console.log('MintUSDCButton - chainId:', chainId, 'usdcAddress:', usdcAddress);
 
   const handleMint = async () => {
     if (!isConnected || !address) {
       setStatus('Please connect your wallet.');
       console.log('MintUSDCButton - Validation failed:', { isConnected, address });
+      return;
+    }
+
+    if (!usdcAddress) {
+      setStatus('Minting not supported on this chain.');
+      console.log('MintUSDCButton - No USDC address for chain:', chainId);
       return;
     }
 
@@ -46,7 +57,7 @@ const MintUSDCButton = () => {
       console.log('MintUSDCButton - Minting 100 USDC for:', address, 'Amount:', mintAmount.toString());
 
       const txHash = await writeContractAsync({
-        address: USDC_ADDRESS as `0x${string}`,
+        address: usdcAddress as `0x${string}`,
         abi: MOCK_USDC_ABI,
         functionName: 'mint',
         args: [address, mintAmount],
@@ -61,6 +72,11 @@ const MintUSDCButton = () => {
       setIsMinting(false);
     }
   };
+
+  // Don't render if no USDC address is available (optional, since we'll control rendering in CreateRoomCard)
+  if (!usdcAddress) {
+    return null;
+  }
 
   return (
     <div className="mt-4 text-center">

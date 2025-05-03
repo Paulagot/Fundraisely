@@ -311,6 +311,26 @@ export function setupSocketHandlers(io) {
       emitRoomUpdate(roomId, io);
     });
 
+    socket.on('payments_finalized', ({ roomId, txHash }) => {
+      console.log(`[Server] 💰 Processing payments_finalized for room: ${roomId}, txHash: ${txHash}`);
+      const room = getRoom(roomId);
+      if (!room) {
+        console.warn(`[Server] 🚫 Room not found: ${roomId}`);
+        return;
+      }
+      const player = room.players.get(socket.id);
+      if (!player?.isHost) {
+        console.warn(`[Server] 🚫 Player ${socket.id} is not the host of room ${roomId}`);
+        return;
+      }
+      // Update room state
+      setPaymentsFinalized(roomId, true);
+      // Broadcast to all clients in the room
+      io.to(roomId).emit('payments_finalized', { roomId, txHash });
+      console.log(`[Server] ✅ Broadcasted payments_finalized to room ${roomId}`);
+      emitRoomUpdate(roomId, io);
+    });
+
     socket.on('leave_room', ({ roomId }) => {
       console.log(`👋 leave_room request - roomId: ${roomId}, socketId: ${socket.id}`);
       console.log(`👋 Socket ${socket.id} leaving room ${roomId}`);

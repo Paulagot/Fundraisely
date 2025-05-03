@@ -1,27 +1,25 @@
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { SolanaAdapter } from '@reown/appkit-adapter-solana/react';
 import {
-  mainnet,
+  
   sepolia,
   baseSepolia,
-  base,
-  blastSepolia,
-  polygon,
+  base, 
   arbitrum,
+  arbitrumSepolia,
+  optimism,
+  optimismSepolia,  
+  avalanche,
+  avalancheFuji,
+  sei,  
+  seiTestnet,  
+  bscTestnet,
+  bsc,
   solana,
   solanaDevnet,
   solanaTestnet,
-  optimismSepolia,
-  bobSepolia,
-  rootstockTestnet,
-  seiDevnet,
-  avalanche,
-  arbitrumSepolia,
-  blast,
-  optimism,
-  bob,
-  rootstock,
-  sei,
+  mainnet,  
+  
 } from '@reown/appkit/networks';
 import type { AppKitNetwork } from '@reown/appkit/networks';
 
@@ -40,28 +38,28 @@ export const metadata = {
 
 // ✅ THIS is the key part: networks must be defined at the top level
 export const networks: [AppKitNetwork, ...AppKitNetwork[]] = [
- 
+ // Testnets
   sepolia,
   baseSepolia,
-  blastSepolia,
   optimismSepolia,
   arbitrumSepolia,
-  bobSepolia,
-  rootstockTestnet,
-  seiDevnet,
-  solanaDevnet,
-  solanaTestnet,
-  mainnet,
-    base,
-  blast,
-  optimism,
-  arbitrum,
-  bob,
-  rootstock,
+  bscTestnet,
+  avalancheFuji,
+  seiTestnet,
+  // Mainnets
+  bsc,
   sei,
-  avalanche,
-  polygon,
+  avalanche,  
+  base,  
+  optimism,
+  arbitrum,  
+  mainnet,
+
+  //non-evm
   solana,
+  solanaDevnet,
+  solanaTestnet
+ 
   
  
 ];
