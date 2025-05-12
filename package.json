@@ -28,7 +28,9 @@
     "socket.io-client": "^4.7.4",
     "viem": "^2.26.3",
     "wagmi": "^2.14.16",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "bs58": "^6.0.0"
+    
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

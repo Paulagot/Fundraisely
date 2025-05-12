@@ -1,0 +1,284 @@
+{
+  "address": "Ev3D1mV3m1HZFZAJb8r68VoURxUxJq1o9vtcajZKXgDo",
+  "metadata": {
+    "name": "solana_bingo",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "create_room",
+      "docs": [
+        "Creates a new bingo room."
+      ],
+      "discriminator": [
+        130,
+        166,
+        32,
+        2,
+        247,
+        120,
+        178,
+        53
+      ],
+      "accounts": [
+        {
+          "name": "host",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "room",
+          "docs": [
+            "PDA to hold room state"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  109
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "host"
+              },
+              {
+                "kind": "arg",
+                "path": "room_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "room_token_account",
+          "docs": [
+            "Associated token account owned by the room PDA"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  109,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "room"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payment_token",
+          "docs": [
+            "Payment currency mint (e.g., USDC)"
+          ]
+        },
+        {
+          "name": "platform_wallet",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "room_id",
+          "type": "u64"
+        },
+        {
+          "name": "entry_fee",
+          "type": "u64"
+        },
+        {
+          "name": "max_players",
+          "type": "u8"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Room",
+      "discriminator": [
+        156,
+        199,
+        67,
+        27,
+        222,
+        23,
+        185,
+        94
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "PlayerJoinedEvent",
+      "discriminator": [
+        80,
+        201,
+        181,
+        60,
+        46,
+        141,
+        44,
+        189
+      ]
+    },
+    {
+      "name": "RoomCreatedEvent",
+      "discriminator": [
+        185,
+        49,
+        91,
+        203,
+        231,
+        170,
+        121,
+        151
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "PlayerAlreadyJoined",
+      "msg": "Player has already joined this room"
+    },
+    {
+      "code": 6001,
+      "name": "HostCannotJoin",
+      "msg": "Host cannot join the game"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidEntryFee",
+      "msg": "Entry fee must be greater than zero"
+    },
+    {
+      "code": 6003,
+      "name": "EntryFeeTooHigh",
+      "msg": "Entry fee is higher than the room-intake cap (1000 USDC)"
+    },
+    {
+      "code": 6004,
+      "name": "GameCapReached",
+      "msg": "Game cap reached"
+    },
+    {
+      "code": 6005,
+      "name": "InsufficientFunds",
+      "msg": "Insufficient funds to join the room"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidMaxPlayers",
+      "msg": "Invalid max players"
+    }
+  ],
+  "types": [
+    {
+      "name": "PlayerJoinedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "room",
+            "type": "pubkey"
+          },
+          {
+            "name": "player",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Room",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "host",
+            "type": "pubkey"
+          },
+          {
+            "name": "platform_wallet",
+            "type": "pubkey"
+          },
+          {
+            "name": "entry_fee",
+            "type": "u64"
+          },
+          {
+            "name": "max_players",
+            "type": "u8"
+          },
+          {
+            "name": "players",
+            "type": {
+              "vec": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoomCreatedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "room",
+            "type": "pubkey"
+          },
+          {
+            "name": "host",
+            "type": "pubkey"
+          },
+          {
+            "name": "entry_fee",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ]
+}

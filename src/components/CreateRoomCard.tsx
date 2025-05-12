@@ -8,6 +8,8 @@ import MintUSDCButton from './MintUSDCButton';
 import { saveRoomCreationData } from '../utils/localStorageUtils';
 import { chainInfo } from '../constants/contractFactoryAddresses'; // Import chainInfo
 
+
+
 interface CreateRoomCardProps {
   onCreateRoom: (roomData: {
     playerName: string;
@@ -66,6 +68,8 @@ const CreateRoomCard: FC<CreateRoomCardProps> = ({ onCreateRoom, isGenerating, r
         } else if (!isSolana && !isEip155Connected) {
           await open({ view: 'Connect', namespace: 'eip155' });
         }
+        console.log('🧪 Trying to switch to chain:', newChainId, 'Resolved as:', newNetwork?.name);
+
         await switchNetwork(newChainId);
       } catch (err) {
         console.error('Failed to switch chain:', err);
@@ -77,41 +81,44 @@ const CreateRoomCard: FC<CreateRoomCardProps> = ({ onCreateRoom, isGenerating, r
 
   const formReady = createName.trim() !== '' && entryFee !== '' && selectedChain !== '' && isConnected;
 
-  const handleConfirm = async (walletAddress: string, contractAddress: string) => {
-    if (!address || selectedChain === '') return;
+const handleConfirm = async (walletAddress: string, contractAddress: string) => {
+  if (!address || selectedChain === '') return;
 
-    const selectedNetwork = supportedNetworks.find((n) => String(n.id) === selectedChain);
-    const namespace = selectedNetwork?.namespace || 'eip155';
+  const selectedNetwork = supportedNetworks.find((n) => String(n.id) === selectedChain);
+  const namespace = selectedNetwork?.namespace || 'eip155';
 
-    if (namespace === 'solana') {
-      alert('Solana is not yet supported for room creation. Please select an EVM chain.');
-      setShowConfirmModal(false);
-      return;
-    }
+  // ✅ Don't treat Solana differently here — let ConfirmRoomModal handle it
+  onCreateRoom({
+    playerName: createName,
+    entryFee,
+    chain: Number(selectedChain),
+    walletAddress,
+    roomId,
+    contractAddress,
+    namespace,
+  });
 
-    onCreateRoom({
-      playerName: createName,
-      entryFee,
-      chain: Number(selectedChain),
-      walletAddress,
-      roomId,
-      contractAddress,
-      namespace,
-    });
+  saveRoomCreationData({
+    isCreator: true,
+    playerName: createName,
+    entryFee,
+    chain: Number(selectedChain),
+    roomId,
+    walletAddress,
+    contractAddress,
+    namespace,
+  });
 
-    saveRoomCreationData({
-      isCreator: true,
-      playerName: createName,
-      entryFee,
-      chain: Number(selectedChain),
-      roomId,
-      walletAddress,
-      contractAddress,
-      namespace,
-    });
+  setShowConfirmModal(false);
+};
+  
 
-    setShowConfirmModal(false);
-  };
+  console.log('🔍 currentNetwork:', currentNetwork);
+if (currentNetwork?.namespace === 'solana') {
+  console.log('📡 Solana network ID:', currentNetwork.id); // Should be 'solanaDevnet' or similar
+}
+
+
 
   // Check if the selected chain is a testnet with a USDC address
   const isTestnetWithUSDC = selectedChain && TESTNET_CHAIN_IDS.includes(selectedChain) && !!chainInfo[selectedChain]?.usdcAddress;
