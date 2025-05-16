@@ -154,7 +154,7 @@ const FundRaiselyWhereYouSave: React.FC = () => {
         </div>
       </div>
 
-      <Hfooter />
+     
     </div>
   );
 };
