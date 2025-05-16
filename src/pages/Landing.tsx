@@ -9,6 +9,7 @@ import CTASection from '../components/CTASection';
 import Benefit from '../components/Benefits';
 import Hfooter from '../components/hFooter';
 import { Link } from 'react-router-dom';
+import FundRaiselyWhereYouSave from './savings';
 
 export function Landing() {
   const { resetGameState } = useGameStore((state) => ({
@@ -55,11 +56,12 @@ export function Landing() {
           </div>
         </div>
       </div>
-      
+     
          
       <HowItWorks />
       <Benefit />
       <FAQ />
+       <FundRaiselyWhereYouSave />
       <CTASection />
       <Hfooter />
     </div>

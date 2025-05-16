@@ -9,9 +9,6 @@
   "instructions": [
     {
       "name": "create_room",
-      "docs": [
-        "Creates a new bingo room."
-      ],
       "discriminator": [
         130,
         166,
@@ -30,9 +27,6 @@
         },
         {
           "name": "room",
-          "docs": [
-            "PDA to hold room state"
-          ],
           "writable": true,
           "pda": {
             "seeds": [
@@ -58,9 +52,6 @@
         },
         {
           "name": "room_token_account",
-          "docs": [
-            "Associated token account owned by the room PDA"
-          ],
           "writable": true,
           "pda": {
             "seeds": [
@@ -95,10 +86,7 @@
           }
         },
         {
-          "name": "payment_token",
-          "docs": [
-            "Payment currency mint (e.g., USDC)"
-          ]
+          "name": "payment_token"
         },
         {
           "name": "platform_wallet",
@@ -131,6 +119,414 @@
           "type": "u8"
         }
       ]
+    },
+    {
+      "name": "game_over",
+      "discriminator": [
+        91,
+        212,
+        164,
+        201,
+        191,
+        57,
+        99,
+        179
+      ],
+      "accounts": [
+        {
+          "name": "host",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "room",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  109
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "room.host",
+                "account": "Room"
+              },
+              {
+                "kind": "account",
+                "path": "room.room_id",
+                "account": "Room"
+              }
+            ]
+          }
+        },
+        {
+          "name": "room_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  109,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "room"
+              }
+            ]
+          }
+        },
+        {
+          "name": "platform_token_account",
+          "writable": true
+        },
+        {
+          "name": "host_token_account",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "_room_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "join_room",
+      "discriminator": [
+        95,
+        232,
+        188,
+        81,
+        124,
+        130,
+        78,
+        139
+      ],
+      "accounts": [
+        {
+          "name": "player",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "host"
+        },
+        {
+          "name": "room",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  109
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "host"
+              },
+              {
+                "kind": "arg",
+                "path": "room_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "room_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  109,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "room"
+              }
+            ]
+          }
+        },
+        {
+          "name": "player_token_account",
+          "writable": true
+        },
+        {
+          "name": "payment_token"
+        },
+        {
+          "name": "platform_wallet",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "_room_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "payout_full_house_winner",
+      "discriminator": [
+        181,
+        111,
+        148,
+        65,
+        49,
+        161,
+        80,
+        23
+      ],
+      "accounts": [
+        {
+          "name": "host",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "room",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  109
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "room.host",
+                "account": "Room"
+              },
+              {
+                "kind": "account",
+                "path": "room.room_id",
+                "account": "Room"
+              }
+            ]
+          }
+        },
+        {
+          "name": "room_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  109,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "room"
+              }
+            ]
+          }
+        },
+        {
+          "name": "recipient",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "_room_id",
+          "type": "u64"
+        },
+        {
+          "name": "winners",
+          "type": {
+            "vec": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "payout_row_winner",
+      "discriminator": [
+        204,
+        52,
+        222,
+        217,
+        208,
+        215,
+        180,
+        6
+      ],
+      "accounts": [
+        {
+          "name": "host",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "room",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  109
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "room.host",
+                "account": "Room"
+              },
+              {
+                "kind": "account",
+                "path": "room.room_id",
+                "account": "Room"
+              }
+            ]
+          }
+        },
+        {
+          "name": "room_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  111,
+                  109,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "room"
+              }
+            ]
+          }
+        },
+        {
+          "name": "recipient",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "_room_id",
+          "type": "u64"
+        },
+        {
+          "name": "winners",
+          "type": {
+            "vec": "pubkey"
+          }
+        }
+      ]
     }
   ],
   "accounts": [
@@ -149,6 +545,32 @@
     }
   ],
   "events": [
+    {
+      "name": "FullHouseWinnersDeclared",
+      "discriminator": [
+        51,
+        203,
+        20,
+        61,
+        24,
+        237,
+        226,
+        192
+      ]
+    },
+    {
+      "name": "GameOverEvent",
+      "discriminator": [
+        38,
+        254,
+        214,
+        145,
+        206,
+        19,
+        233,
+        62
+      ]
+    },
     {
       "name": "PlayerJoinedEvent",
       "discriminator": [
@@ -174,6 +596,19 @@
         121,
         151
       ]
+    },
+    {
+      "name": "RowWinnersDeclared",
+      "discriminator": [
+        163,
+        231,
+        48,
+        58,
+        17,
+        0,
+        105,
+        50
+      ]
     }
   ],
   "errors": [
@@ -189,31 +624,159 @@
     },
     {
       "code": 6002,
+      "name": "HostCannotWin",
+      "msg": "Host cannot win prizes"
+    },
+    {
+      "code": 6003,
       "name": "InvalidEntryFee",
       "msg": "Entry fee must be greater than zero"
     },
     {
-      "code": 6003,
-      "name": "EntryFeeTooHigh",
-      "msg": "Entry fee is higher than the room-intake cap (1000 USDC)"
-    },
-    {
       "code": 6004,
-      "name": "GameCapReached",
-      "msg": "Game cap reached"
+      "name": "EntryFeeTooHigh",
+      "msg": "Entry fee exceeds cap"
     },
     {
       "code": 6005,
-      "name": "InsufficientFunds",
-      "msg": "Insufficient funds to join the room"
+      "name": "GameCapReached",
+      "msg": "Maximum number of players reached"
     },
     {
       "code": 6006,
+      "name": "InsufficientFunds",
+      "msg": "Insufficient funds"
+    },
+    {
+      "code": 6007,
+      "name": "IntakeCapReached",
+      "msg": "Intake cap reached"
+    },
+    {
+      "code": 6008,
+      "name": "NotEnoughPlayers",
+      "msg": "InvalidWinner"
+    },
+    {
+      "code": 6009,
+      "name": "InvalidWinner",
+      "msg": "Invalid winner"
+    },
+    {
+      "code": 6010,
+      "name": "RowRequiredFirst",
+      "msg": "Must declare row first"
+    },
+    {
+      "code": 6011,
+      "name": "GameNotComplete",
+      "msg": "Game is not complete"
+    },
+    {
+      "code": 6012,
+      "name": "AlreadyPaid",
+      "msg": "Payments already processed"
+    },
+    {
+      "code": 6013,
+      "name": "NoWinners",
+      "msg": "No winners provided"
+    },
+    {
+      "code": 6014,
       "name": "InvalidMaxPlayers",
       "msg": "Invalid max players"
+    },
+    {
+      "code": 6015,
+      "name": "TooManyPlayers",
+      "msg": "Too many players requested"
+    },
+    {
+      "code": 6016,
+      "name": "UnauthorizedHost",
+      "msg": "Unauthorized host"
+    },
+    {
+      "code": 6017,
+      "name": "UnauthorizedPlatform",
+      "msg": "Unauthorized platform"
+    },
+    {
+      "code": 6018,
+      "name": "RowNotDeclared",
+      "msg": "Row not declared"
+    },
+    {
+      "code": 6019,
+      "name": "FullHouseNotDeclared",
+      "msg": "Full house not declared"
+    },
+    {
+      "code": 6020,
+      "name": "RowAlreadyPaid",
+      "msg": "Row payout already done"
+    },
+    {
+      "code": 6021,
+      "name": "FullHouseAlreadyPaid",
+      "msg": "Full house payout already done"
+    },
+    {
+      "code": 6022,
+      "name": "GameAlreadyFinalized",
+      "msg": "Game already finalized"
+    },
+    {
+      "code": 6023,
+      "name": "PrizesNotPaidYet",
+      "msg": "Prizes not paid yet"
+    },
+    {
+      "code": 6024,
+      "name": "AlreadyPaidWinner",
+      "msg": "Winner has already been paid"
     }
   ],
   "types": [
+    {
+      "name": "FullHouseWinnersDeclared",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "room",
+            "type": "pubkey"
+          },
+          {
+            "name": "winners",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "share_per_winner",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GameOverEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "platform_amount",
+            "type": "u64"
+          },
+          {
+            "name": "host_amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
     {
       "name": "PlayerJoinedEvent",
       "type": {
@@ -252,7 +815,51 @@
             "type": "u8"
           },
           {
+            "name": "total_collected",
+            "type": "u64"
+          },
+          {
+            "name": "row_declared",
+            "type": "bool"
+          },
+          {
+            "name": "full_house_declared",
+            "type": "bool"
+          },
+          {
+            "name": "row_paid",
+            "type": "bool"
+          },
+          {
+            "name": "full_house_paid",
+            "type": "bool"
+          },
+          {
+            "name": "_payments_processed",
+            "type": "bool"
+          },
+          {
+            "name": "room_id",
+            "type": "u64"
+          },
+          {
+            "name": "room_bump",
+            "type": "u8"
+          },
+          {
             "name": "players",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "row_winners",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "full_house_winners",
             "type": {
               "vec": "pubkey"
             }
@@ -275,6 +882,28 @@
           },
           {
             "name": "entry_fee",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RowWinnersDeclared",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "room",
+            "type": "pubkey"
+          },
+          {
+            "name": "winners",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "share_per_winner",
             "type": "u64"
           }
         ]

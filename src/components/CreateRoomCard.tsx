@@ -1,3 +1,4 @@
+//src/components/CreateRoomCard.tsx
 import { useState, type FC } from 'react';
 import ConfirmRoomModal from './ConfirmRoomModal';
 import { Dices, Users, Wallet, Gamepad2, Info, ArrowRight } from 'lucide-react';

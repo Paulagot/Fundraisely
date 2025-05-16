@@ -74,3 +74,4 @@ export const wagmiAdapter = new WagmiAdapter({
 
 export const solanaWeb3JsAdapter = new SolanaAdapter();
 export const config = wagmiAdapter.wagmiConfig;
+

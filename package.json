@@ -11,13 +11,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.31.1",
     "@headlessui/react": "^2.2.2",
+    "@project-serum/anchor": "^0.26.0",
     "@rainbow-me/rainbowkit": "^2.2.4",
     "@reown/appkit": "^1.7.3",
-    "@reown/appkit-adapter-solana": "^1.7.3",
-    "@reown/appkit-adapter-wagmi": "^1.7.3",
+    "@reown/appkit-adapter-solana": "^1.7.4",
+    "@reown/appkit-adapter-wagmi": "^1.7.4",
+    "@solana/spl-token": "^0.4.13",
     "@tanstack/react-query": "^5.74.4",
+    "anchor": "^1.4.1",
+    "bs58": "^6.0.0",
     "canvas-confetti": "^1.9.2",
+    "coral": "^0.5.1",
     "ethers": "^6.13.5",
     "framer-motion": "^11.0.8",
     "lodash": "^4.17.21",
@@ -28,15 +34,14 @@
     "socket.io-client": "^4.7.4",
     "viem": "^2.26.3",
     "wagmi": "^2.14.16",
-    "zustand": "^4.5.2",
-    "bs58": "^6.0.0"
-    
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/bn.js": "^5.1.6",
     "@types/canvas-confetti": "^1.6.4",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.16",
@@ -68,4 +73,3 @@
     "@lit/reactive-element": "^2.0.0"
   }
 }
-

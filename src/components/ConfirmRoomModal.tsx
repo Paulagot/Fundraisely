@@ -8,8 +8,7 @@ import { useSupportedNetworks } from '../hooks/useSupportedNetworks';
 import type { SupportedNetwork } from '../hooks/useSupportedNetworks';
 import { chainInfo } from '../constants/contractFactoryAddresses';
 import { checkServerHealth } from '../utils/checkServerHealth';
-import { createSolanaRoom } from './createSolanaRoom';
-import { Connection } from '@solana/web3.js';
+import { CreateSolanaRoom } from './createsolanaroom';
 
 interface ConfirmRoomModalProps {
   isOpen: boolean;
@@ -65,6 +64,9 @@ const ConfirmRoomModal: React.FC<ConfirmRoomModalProps> = ({
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
   const [serverHealthy, setServerHealthy] = useState(true);
+  const [triggerSolanaRoomCreation, setTriggerSolanaRoomCreation] = useState(false);
+
+
 
   const selectedNetwork: SupportedNetwork | undefined = supportedNetworks.find(
     (n) => String(n.id) === String(selectedChain)
@@ -93,26 +95,13 @@ const ConfirmRoomModal: React.FC<ConfirmRoomModalProps> = ({
       return;
     }
 
+
     // ✅ Solana logic
-    if (selectedNetwork?.namespace === 'solana') {
-      setIsDeploying(true);
-      setStatus('Creating Solana room...');
-
-      try {
-        const connection = new Connection(selectedNetwork.rpcUrl || 'https://api.devnet.solana.com', 'confirmed');
-        const roomAddress = await createSolanaRoom(address, entryFee, connection);
-
-        setStatus('Solana room created!');
-        onConfirm(address, roomAddress);
-      } catch (err: any) {
-        console.error('❌ Solana room creation failed:', err);
-        setError(err.message || 'Failed to create room on Solana.');
-      } finally {
-        setIsDeploying(false);
-      }
-
-      return; // ❗ Prevent EVM fallback
-    }
+if (selectedNetwork?.namespace === 'solana') {
+  console.log('🌐 Solana network detected - launching Solana room creation');
+  setTriggerSolanaRoomCreation(true); // Show the component
+  return;
+}
 
     // ✅ EVM logic
     if (!factoryAddress) {
@@ -212,6 +201,23 @@ const ConfirmRoomModal: React.FC<ConfirmRoomModalProps> = ({
             {status && <InfoItem label="Status" value={status} className="text-blue-500 bg-blue-50" />}
           </div>
 
+{triggerSolanaRoomCreation && (
+  <CreateSolanaRoom
+    entryFee={entryFee}
+    roomId={String(Date.now())} // or roomId from props if available
+    sendTxId={(txid) => {
+      console.log('✅ Solana TX ID:', txid);
+      onConfirm(address!, 'solana'); // You may want to pass back room PDA later
+    }}
+    onSuccess={() => {
+      setStatus('Solana room created!');
+      setTriggerSolanaRoomCreation(false); // Hide the component
+      onClose();
+    }}
+  />
+)}
+
+
           {!isConnected && (
             <div className="mb-2">
               <button
@@ -240,6 +246,8 @@ const ConfirmRoomModal: React.FC<ConfirmRoomModalProps> = ({
             >
               {isDeploying ? 'Creating...' : 'Create Event'}
             </button>
+
+            
           </div>
         </div>
       </div>

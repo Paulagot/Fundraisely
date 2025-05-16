@@ -6,7 +6,7 @@ import Hfooter from '../components/hFooter';
 const FundRaiselyWhereYouSave: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white pb-20">
-      <Headers />
+     
       
       {/* Hero Section */}
       <div className="container mx-auto px-4 max-w-4xl pt-16 pb-12">
@@ -150,43 +150,7 @@ const FundRaiselyWhereYouSave: React.FC = () => {
           </div>
 
           {/* Pricing Section */}
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl overflow-hidden shadow-xl">
-            <div className="px-8 py-12 text-center">
-              <h2 className="text-3xl font-bold text-white mb-6">💶 All of this for just 6.5% of what you raise</h2>
-              <p className="text-white/90 text-xl mb-8">That's 65 cents per €10 — and you get:</p>
-              
-              <div className="max-w-2xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <div className="text-white/80">✅ Legal clarity</div>
-                <div className="text-white/80">✅ Admin automation</div>
-                <div className="text-white/80">✅ Live dashboards</div>
-                <div className="text-white/80">✅ Transparent reporting</div>
-                <div className="text-white/80">✅ Mixed-payment support</div>
-              </div>
-              
-              <div className="flex flex-wrap justify-center gap-6 mb-8">
-                <div className="text-white/90">✅ No monthly fee</div>
-                <div className="text-white/90">✅ No setup costs</div>
-                <div className="text-white/90">✅ No hidden charges</div>
-              </div>
-              
-              <p className="text-white text-xl mb-8">Want to see how much you'd save? <strong>Try your first event free.</strong></p>
-              
-              <div className="flex flex-wrap justify-center gap-4">
-                <Link 
-                  to="/signup" 
-                  className="bg-white text-indigo-600 px-8 py-3 rounded-xl font-semibold shadow-md hover:bg-indigo-50 transition"
-                >
-                  Start Free Trial
-                </Link>
-                <button 
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
-                  className="bg-indigo-700 text-white px-8 py-3 rounded-xl font-semibold shadow-md hover:bg-indigo-800 transition"
-                >
-                  Back to Top
-                </button>
-              </div>
-            </div>
-          </div>
+        
         </div>
       </div>
 
