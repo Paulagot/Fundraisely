@@ -10,6 +10,9 @@ import Benefit from '../components/Benefits';
 import Hfooter from '../components/hFooter';
 import { Link } from 'react-router-dom';
 import FundRaiselyWhereYouSave from './savings';
+import SolanaWalletOperations from '../components/SolanaWalletOperations';
+
+
 
 export function Landing() {
   const { resetGameState } = useGameStore((state) => ({
@@ -32,6 +35,8 @@ export function Landing() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white pb-20">
+      <SolanaWalletOperations />
+   
       <Headers />
       <HeroSection />
       

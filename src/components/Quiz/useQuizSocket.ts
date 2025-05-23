@@ -1,19 +1,35 @@
-import { useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
-import type { Socket } from 'socket.io-client';
+import { useEffect, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
 
-export const useQuizSocket = () => {
-  const socketRef = useRef<Socket | null>(null);
+export const useQuizSocket = (): Socket | null => {
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_SOCKET_URL, { autoConnect: false });
-    socket.connect();
-    socketRef.current = socket;
+    const newSocket: Socket = io(import.meta.env.VITE_SOCKET_URL + '/quiz', {
+      autoConnect: true,
+      reconnection: true,
+    });
+
+    newSocket.on('connect', () => {
+      console.log('[QuizSocket] ✅ Connected:', newSocket.id);
+      setSocket(newSocket);
+    });
+
+    newSocket.on('disconnect', () => {
+      console.warn('[QuizSocket] ❌ Disconnected');
+      setSocket(null);
+    });
 
     return () => {
-      socket.disconnect();
+      newSocket.disconnect();
     };
   }, []);
 
-  return socketRef.current;
+  return socket;
 };
+
+
+
+
+
+

@@ -10,6 +10,7 @@ import { chainInfo } from '../constants/contractFactoryAddresses';
 import { checkServerHealth } from '../utils/checkServerHealth';
 import { CreateSolanaRoom } from './createsolanaroom';
 
+
 interface ConfirmRoomModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -17,6 +18,7 @@ interface ConfirmRoomModalProps {
   hostName: string;
   entryFee: string;
   selectedChain: string | number;
+
 }
 
 const InfoItem = ({ label, value, className = '' }: { label: string; value: string; className?: string }) => (
@@ -216,7 +218,6 @@ if (selectedNetwork?.namespace === 'solana') {
     }}
   />
 )}
-
 
           {!isConnected && (
             <div className="mb-2">

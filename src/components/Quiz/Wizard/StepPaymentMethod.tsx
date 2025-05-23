@@ -1,16 +1,24 @@
 // components/quiz/wizard/StepPaymentMethod.tsx
 import { useState, type FC, type FormEvent } from 'react';
 import { Wallet, CreditCard, AlertCircle } from 'lucide-react';
-import { useQuizConfig } from '../../../hooks/quiz/useQuizConfig';
+import { useQuizConfig } from '../useQuizConfig';
 import type { WizardStepProps } from './WizardStepProps';
 
 const StepPaymentMethod: FC<WizardStepProps> = ({ onNext, onBack }) => {
   const { config, updateConfig } = useQuizConfig();
-  const [entryFee, setEntryFee] = useState(config.entryFee || '');
   const [paymentMethod, setPaymentMethod] = useState<'cash_or_revolut' | 'web3' | ''>(
     config.paymentMethod || ''
   );
+  const [entryFee, setEntryFee] = useState(config.entryFee || '');
+  const [currencySymbol, setCurrencySymbol] = useState(config.currencySymbol || '€');
   const [error, setError] = useState('');
+
+  const currencyOptions = [
+    { symbol: '€', label: 'Euro (EUR)' },
+    { symbol: '$', label: 'Dollar' },
+    { symbol: '£', label: 'British Pound (GBP)' },
+    { symbol: '₹', label: 'Indian Rupee (INR)' },
+    { symbol: '¥', label: 'Japanese Yen (JPY)' },];
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -28,33 +36,20 @@ const StepPaymentMethod: FC<WizardStepProps> = ({ onNext, onBack }) => {
       return;
     }
 
+    const currencyToStore = paymentMethod === 'web3' ? 'USDC' : currencySymbol;
+
     setError('');
     updateConfig({
       entryFee: trimmed,
       paymentMethod,
+      currencySymbol: currencyToStore,
     });
     onNext();
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <h2 className="text-xl font-semibold text-indigo-800">Step 4 of 5: Entry Fee & Payment Method</h2>
-
-      <div className="space-y-2">
-        <label htmlFor="entryFee" className="text-sm font-medium text-gray-700">
-          Entry Fee (e.g., in credits or USDC)
-        </label>
-        <input
-          id="entryFee"
-          type="number"
-          min="0"
-          step="0.01"
-          value={entryFee}
-          onChange={(e) => setEntryFee(e.target.value)}
-          placeholder="e.g., 5"
-          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
-        />
-      </div>
+      <h2 className="text-xl font-semibold text-indigo-800">Step 3 of 7: Entry Fee & Payment Method</h2>
 
       <div className="grid gap-4">
         <label
@@ -102,6 +97,44 @@ const StepPaymentMethod: FC<WizardStepProps> = ({ onNext, onBack }) => {
         </label>
       </div>
 
+      {paymentMethod === 'cash_or_revolut' && (
+        <div className="space-y-2">
+          <label htmlFor="currency" className="text-sm font-medium text-gray-700">
+            Choose Currency
+          </label>
+          <select
+            id="currency"
+            value={currencySymbol}
+            onChange={(e) => setCurrencySymbol(e.target.value)}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500"
+          >
+            {currencyOptions.map((opt) => (
+              <option key={opt.symbol} value={opt.symbol}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {paymentMethod && (
+        <div className="space-y-2">
+          <label htmlFor="entryFee" className="text-sm font-medium text-gray-700">
+            Entry Fee ({paymentMethod === 'web3' ? 'USDC' : currencySymbol})
+          </label>
+          <input
+            id="entryFee"
+            type="number"
+            min="0"
+            step="0.01"
+            value={entryFee}
+            onChange={(e) => setEntryFee(e.target.value)}
+            placeholder="e.g., 5"
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500"
+          />
+        </div>
+      )}
+
       {error && (
         <div className="flex items-start gap-2 bg-red-50 text-red-700 px-3 py-2 rounded-lg text-sm">
           <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
@@ -131,3 +164,5 @@ const StepPaymentMethod: FC<WizardStepProps> = ({ onNext, onBack }) => {
 };
 
 export default StepPaymentMethod;
+
+

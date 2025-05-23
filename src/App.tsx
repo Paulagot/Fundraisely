@@ -9,6 +9,14 @@ import { PitchDeckContent } from './pages/PitchDeckContent';
 import { ActionButtonList } from './components/ActionButtonList';
 import { InfoList } from './components/InfoList';
 import ErrorBoundary from './components/ErrorBoundary';
+import HostDashboard from './components/Quiz/dashboard/HostDashboard'; // Import the HostDashboard component}
+import QuizChallengePage from './pages/QuizChallengePage';
+import QuizGameWaitingPage from './pages/QuizGameWaitingPage';
+import JoinQuizWeb2Page from '../src/components/Quiz/joinroom/JoinQuizWeb2Page';
+import QuizGamePlayPage from './pages/QuizGamePlayPage';
+
+
+
 
 export default function App() {
   const navigate = useNavigate();
@@ -63,6 +71,12 @@ export default function App() {
             <Route path="/pitch-deck" element={<PitchDeck />} />
             <Route path="/pitch-deck-content" element={<PitchDeckContent />} />
             <Route path="/BingoBlitz" element={<TestCampaign />} /> {/* Add the new route */}
+            <Route path="/host-dashboard/:roomId" element={<HostDashboard />} />
+            <Route path="/quiz" element={<QuizChallengePage />} />
+            <Route path="/quiz/game/:roomId/:playerId" element={<QuizGameWaitingPage />} />
+            <Route path="/join/:roomId" element={<JoinQuizWeb2Page />} />
+            <Route path="/quiz/play/:roomId/:playerId" element={<QuizGamePlayPage />} />
+             <Route path="/test" element={<QuizGamePlayPage />} />
           </Routes>
         </main>
       </div>

@@ -1,0 +1,150 @@
+[
+  {
+    "id": "q1",
+    "text": "What planet is known as the Red Planet?",
+    "options": ["Mars", "Venus", "Jupiter", "Saturn"],
+    "correctAnswer": "Mars",
+    "type": "multiple_choice",
+    "clue": "It's named after the Roman god of war.",
+    "points": 10,
+    "level": "easy"
+  },
+  {
+    "id": "q2",
+    "text": "What is the square root of 64?",
+    "correctAnswer": "8",
+    "type": "short_answer",
+    "clue": "It's a single-digit number.",
+    "points": 15,
+    "level": "easy"
+  },
+  {
+  "id": "q3",
+  "text": "Arrange these rivers from longest to shortest.",
+  "options": ["Nile", "Amazon", "Yangtze", "Mississippi"],
+  "correctAnswer": ["Nile", "Amazon", "Yangtze", "Mississippi"],
+  "type": "ordering",
+  "clue": "Length matters!",
+  "points": 40,
+  "level": "hard"
+},
+
+{
+  "id": "q4",
+  "text": "Match each river to its primary country.",
+  "options": {
+    "rivers": ["Amazon", "Nile", "Yangtze"],
+    "countries": ["Brazil", "Egypt", "China"]
+  },
+  "correctAnswer": {
+    "Amazon": "Brazil",
+    "Nile": "Egypt",
+    "Yangtze": "China"
+  },
+  "type": "matching",
+  "clue": "Think about geography!",
+  "points": 30,
+  "level": "medium"
+},
+{
+  "id": "q5",
+  "text": "The Amazon River is longer than the Nile.",
+  "options": ["True", "False"],
+  "correctAnswer": "False",
+  "type": "true_false",
+  "clue": "Check the longest river!",
+  "points": 10,
+  "level": "easy"
+},
+
+  
+  {
+    "id": "q6",
+    "text": "What planet is known as the Red Planet?",
+    "options": ["Mars", "Venus", "Jupiter", "Saturn"],
+    "correctAnswer": "Mars",
+    "type": "multiple_choice",
+    "clue": "It's named after the Roman god of war.",
+    "points": 10,
+    "level": "easy"
+  },
+  {
+    "id": "q7",
+    "text": "What is the square root of 64?",
+    "correctAnswer": "8",
+    "type": "short_answer",
+    "clue": "It's a single-digit number.",
+    "points": 15,
+    "level": "easy"
+  },
+  {
+    "id": "q8",
+    "text": "Who painted the Mona Lisa?",
+    "options": ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello"],
+    "correctAnswer": "Leonardo da Vinci",
+    "type": "multiple_choice",
+    "clue": "He was also a famous inventor and engineer.",
+    "points": 20,
+    "level": "medium"
+  },
+  {
+    "id": "q9",
+    "text": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "type": "short_answer",
+    "clue": "It's not what you'd expect — think Latin.",
+    "points": 15,
+    "level": "medium"
+  },
+  {
+    "id": "q10",
+    "text": "What is the longest river in the world?",
+    "options": ["Amazon", "Nile", "Yangtze", "Mississippi"],
+    "correctAnswer": "Nile",
+    "type": "multiple_choice",
+    "clue": "It flows through Egypt.",
+    "points": 25,
+    "level": "hard"
+  },
+  {
+  "id": "q11",
+  "text": "Arrange these rivers from longest to shortest.",
+  "options": ["Nile", "Amazon", "Yangtze", "Mississippi"],
+  "correctAnswer": ["Nile", "Amazon", "Yangtze", "Mississippi"],
+  "type": "ordering",
+  "clue": "Length matters!",
+  "points": 40,
+  "level": "hard"
+},
+
+{
+  "id": "q12",
+  "text": "Match each river to its primary country.",
+  "options": {
+    "rivers": ["Amazon", "Nile", "Yangtze"],
+    "countries": ["Brazil", "Egypt", "China"]
+  },
+  "correctAnswer": {
+    "Amazon": "Brazil",
+    "Nile": "Egypt",
+    "Yangtze": "China"
+  },
+  "type": "matching",
+  "clue": "Think about geography!",
+  "points": 30,
+  "level": "medium"
+},
+{
+  "id": "q13",
+  "text": "The Amazon River is longer than the Nile.",
+  "options": ["True", "False"],
+  "correctAnswer": "False",
+  "type": "true_false",
+  "clue": "Check the longest river!",
+  "points": 10,
+  "level": "easy"
+}
+]
+
+
+

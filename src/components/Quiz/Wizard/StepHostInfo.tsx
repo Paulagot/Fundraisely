@@ -1,7 +1,7 @@
 // components/quiz/wizard/StepHostInfo.tsx
 import { useState, type FC } from 'react';
 import type { FormEvent } from 'react';
-import { useQuizConfig } from '../../../hooks/quiz/useQuizConfig';
+import { useQuizConfig } from '../useQuizConfig';
 import { Users, AlertCircle } from 'lucide-react';
 import type { WizardStepProps } from './WizardStepProps';
 
@@ -28,11 +28,11 @@ const StepHostInfo: FC<WizardStepProps> = ({ onNext }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <h2 className="text-xl font-semibold text-indigo-800">Step 1 of 5: Host Details</h2>
+      <h2 className="text-xl font-semibold text-indigo-800">Step 1 of 7: Host Details</h2>
 
       <div className="relative">
         <label htmlFor="hostName" className="block text-sm font-medium text-gray-700 mb-1">
-          Your Name (or Team Name)
+          Your Name 
         </label>
         <input
           id="hostName"

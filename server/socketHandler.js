@@ -1,10 +1,19 @@
 // server/socketHandler.js
+console.log('🧠 [socketHandler.js] File loaded');
+
 import { clearAutoPlayInterval, startAutoPlay, callNextNumber } from './gameLogic.js';
 import { createRoom, getRoom, deleteRoom, emitRoomUpdate, setPaymentsFinalized } from './roomManager.js';
 import { isRateLimited } from './socketRateLimiter.js';
+import { setupQuizSocketHandlers } from './quiz/quizSocketHandler.js'
+
+
 
 export function setupSocketHandlers(io) {
   console.log('🔌 Setting up socket handlers');
+
+      console.log('🎯 About to initialize quiz namespace...');
+  setupQuizSocketHandlers(io.of('/quiz'));
+  console.log('✅ Quiz socket handlers registered');
 
   io.on('connection', (socket) => {
     console.log('👤 User connected:', socket.id, 'from', socket.handshake.address);
@@ -414,4 +423,6 @@ export function setupSocketHandlers(io) {
       console.log(`👋 User disconnected: ${socket.id} from ${socket.handshake.address}`);
     });
   });
+
+
 }

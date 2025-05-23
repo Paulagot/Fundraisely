@@ -1,6 +1,6 @@
 # Multiplayer Crypto Bingo Game 🎲  
 
-A real-time multiplayer Bingo game built with React, TypeScript, and Socket.io, along with smart contracts driven by blockchain. featuring responsive design, single-player mode, and dynamic room management.  Smart Contract to managed payment and winner prizes.
+A real-time multiplayer Bingo game built with React, TypeScript, and Socket.io, along with smart contracts driven by the Solana blockchain. featuring responsive design, single-player mode, and dynamic room management.  Smart Contract to managed payment and winner prizes.
 
 ## Features  
 
@@ -10,14 +10,14 @@ A real-time multiplayer Bingo game built with React, TypeScript, and Socket.io, 
 - **Auto-play Functionality**: Automatically call Bingo numbers for a seamless experience.  
 - **Real-Time Updates**: Instant updates for all players in a room.  
 - **Winner Celebration**: Confetti for the winner and a message for other players.  
-- **Smart Contracts to manage prize pool**: curently available on sepolia testnet,
+- **Solana program to manage prize pool**: curently available on Solana Devnet,
 
 ---
 
 ## Prerequisites
 
-- **Sepolia testnet tokens to mint and play with**: inlcuding mint button for testnet USDC.
-- **requires testnet Eth to launch smart contract and game**: host requies sepilia testnet eth to launch a game.
+- **Solana testnet tokens to mint and play with**: inlcuding mint button for testnet USDC.
+- **requires testnet SOL to launch smart contract and game**: host requies testnet SOL to launch a game.
 Ensure you have the following installed:  
 - [Node.js](https://nodejs.org/)
 - [npm](https://www.npmjs.com/)  
@@ -79,7 +79,8 @@ By default, the app will run at `http://localhost:5173`.
 - **Backend**: Node.js, Express, Socket.io  
 - **Styling**: Tailwind CSS  
 - **Reown appkit**: wallet connections and functionality
-- **Viem and Wagmi**: smart contract interaction
+- **Blockchain**: Solana Devnet
+
 
 ---
 

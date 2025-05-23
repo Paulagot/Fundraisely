@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import type { FC, FormEvent } from 'react';
 import { quizGameTypes } from '../../../constants/quiztypeconstants';
-import { useQuizConfig } from '../../../hooks/quiz/useQuizConfig';
+import { useQuizConfig } from '../useQuizConfig';
 import type { WizardStepProps } from './WizardStepProps';
 import { AlertCircle } from 'lucide-react';
 
@@ -38,7 +38,7 @@ const StepGameType: FC<WizardStepProps> = ({ onNext, onBack }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <h2 className="text-xl font-semibold text-indigo-800">Step 2 of 5: Choose Quiz Type</h2>
+      <h2 className="text-xl font-semibold text-indigo-800">Step 2 of 7: Choose Quiz Type</h2>
 
       <div className="grid gap-4">
         {quizGameTypes.map((type) => (

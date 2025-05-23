@@ -1,8 +1,7 @@
-// hooks/quiz/useQuizConfig.ts
+// /quiz/useQuizConfig.ts
 
 import { create } from 'zustand';
 import type { QuizConfig } from '../../types/quiz';
-
 
 interface QuizState {
   config: Partial<QuizConfig>;
@@ -12,6 +11,7 @@ interface QuizState {
 
 export const useQuizConfig = create<QuizState>((set) => ({
   config: {},
+
   updateConfig: (updates) =>
     set((state) => ({
       config: {
@@ -21,9 +21,14 @@ export const useQuizConfig = create<QuizState>((set) => ({
           ...state.config.fundraisingOptions,
           ...updates.fundraisingOptions,
         },
+        fundraisingPrices: {
+          ...state.config.fundraisingPrices,
+          ...updates.fundraisingPrices,
+        },
       },
     })),
+
   resetConfig: () => set({ config: {} }),
+ 
+
 }));
-
-

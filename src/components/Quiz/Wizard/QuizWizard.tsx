@@ -2,12 +2,16 @@
 import { useState } from 'react';
 import StepHostInfo from './StepHostInfo';
 import StepGameType from './StepGameType';
+import StepRoundSettings from './StepRoundSettings';
 import StepFundraisingOptions from './StepFundraisingOptions';
 import StepPaymentMethod from './StepPaymentMethod';
 import StepReviewLaunch from './StepReviewLaunch';
+import StepPrizes from './StepPrizes';
+import StepSchedule from './StepSchedule';
 
-const steps = ['host', 'type', 'fundraising', 'payment', 'review'] as const;
-type Step = typeof steps[number];
+
+const steps = ['host', 'type', 'payment', 'fundraising', 'stepPrizes',  'round', 'schedule', 'review'] as const;
+
 
 export default function QuizWizard() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -30,12 +34,19 @@ export default function QuizWizard() {
         return <StepHostInfo onNext={goNext} />;
       case 'type':
         return <StepGameType onNext={goNext} onBack={goBack} />;
-      case 'fundraising':
-        return <StepFundraisingOptions onNext={goNext} onBack={goBack} />;
       case 'payment':
         return <StepPaymentMethod onNext={goNext} onBack={goBack} />;
+        
+      case 'fundraising':
+        return <StepFundraisingOptions onNext={goNext} onBack={goBack} />;
+      case 'stepPrizes':
+        return <StepPrizes onNext={goNext} onBack={goBack} />;
+      case 'round':
+        return <StepRoundSettings onNext={goNext} onBack={goBack} />; 
+      case 'schedule':
+        return <StepSchedule onNext={goNext} onBack={goBack} />;
       case 'review':
-        return <StepReviewLaunch onBack={goBack} />;
+        return <StepReviewLaunch onNext={goNext} onBack={goBack} />;
       default:
         return null;
     }
